@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship Game</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Battleship Game (10x10)</h1>
+
+    <!-- Board for placing ships and attacking -->
+    <div class="board-wrapper">
+        <div class="board" id="board"></div>
+    </div>
+
+    <!-- Ship Placement Controls -->
+    <div id="controls">
+        <h2>Place Your Ships</h2>
+        <label for="ship-length">Ship Length:</label>
+        <select id="ship-length">
+            <option value="2">Destroyer (2 units)</option>
+            <option value="3">Submarine (3 units)</option>
+            <option value="4">Battleship (4 units)</option>
+            <option value="5">Carrier (5 units)</option>
+        </select>
+        <br><br>
+
+        <label for="start-coord">Starting Coordinate (e.g., A1):</label>
+        <input type="text" id="start-coord" placeholder="A1">
+        <br><br>
+
+        <label for="direction">Direction:</label>
+        <select id="direction">
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+        </select>
+        <br><br>
+
+        <button id="place-ship">Place Ship</button>
+        <button id="start-game">Start Attack Phase</button>
+    </div>
+
+    <script src="/static/js/game.js"></script>
+    <script src="/static/js/board.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+
+.board-wrapper {
+    display: inline-block;
+    position: relative;
+}
+.board {
+    display: grid;
+    grid-template-columns: 30px repeat(10, 50px); /* 10x10 grid, plus labels */
+    grid-template-rows: 30px repeat(10, 50px);
+    gap: 5px;
+}
+.cell {
+    width: 50px;
+    height: 50px;
+    background-color: lightblue;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    border: 1px solid black;
+}
+.label {
+    text-align: center;
+    line-height: 30px;
+}
+.hit {
+    background-color: red;
+}
+.miss {
+    background-color: white;
+}
+.row-label, .col-label {
+    background-color: lightgray;
+    line-height: 30px;
+}
