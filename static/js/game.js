@@ -110,9 +110,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     event.target.classList.add("miss");
                     playRandomMissSound();
-                    playMissAnimation(event.target);
+                    playMissAnimation(event.target);a
                 }
             }, 1500);  // 1.5 second delay
+
+            setTimeout(() => {
+                //change turn - I put this on a timer for now but we can change later
+                nextTurn();
+            }, 5000);
         }
     });
 
