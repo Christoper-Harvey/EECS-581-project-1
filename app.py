@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 # Game data
 game_state = {
-    "board_size": 5,  # A 5x5 board for simplicity
+    "board_size": 10,
     "ships": [(1, 1), (2, 2), (3, 3)],  # Example ships coordinates (row, col)
     "hits": [],
     "misses": []

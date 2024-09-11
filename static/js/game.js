@@ -5,6 +5,29 @@ document.addEventListener("DOMContentLoaded", function () {
     let isAttackPhase = false;
     let placedShips = [];
 
+    // Preload audio files
+    const canonFire = new Audio('/static/sfx/canonFire.wav');
+    const endGame = new Audio('/static/sfx/finalExplosionGameEnd.wav');
+    const victoryCry = new Audio('/static/sfx/victoryCry.wav');
+    const victoryTrumpet = new Audio('/static/sfx/victoryTrumpet.wav');
+
+    // This will be used to play the victory theme
+    // endGame.play(); // Used for the final hit, big sound
+    // victoryTrumpet.play(); // the two below play at the same time.
+    // victoryCry.play();
+
+    // Preload miss sounds
+    const hitSounds = [
+        new Audio('/static/sfx/hitLarge.wav'),
+        new Audio('/static/sfx/hitSmall.wav')
+    ];
+
+    // Preload miss sounds
+    const missSounds = [
+        new Audio('/static/sfx/miss1.wav'),
+        new Audio('/static/sfx/miss2.wav')
+    ];
+
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
         const shipLength = parseInt(document.getElementById("ship-length").value);
@@ -76,14 +99,66 @@ document.addEventListener("DOMContentLoaded", function () {
             const row = event.target.dataset.row;
             const col = event.target.dataset.col;
 
-            // Check if the player hits or misses
-            if (placedShips.some(ship => ship.row == row && ship.col == col)) {
-                event.target.classList.add("hit");
-                // alert("Hit!");
-            } else {
-                event.target.classList.add("miss");
-                // alert("Miss!");
-            }
+            canonFire.play();
+
+            setTimeout(() => {
+                // Check if the player hits or misses
+                if (placedShips.some(ship => ship.row == row && ship.col == col)) {
+                    event.target.classList.add("hit");
+                    playRandomHitSound();
+                    playHitAnimation(event.target);
+                } else {
+                    event.target.classList.add("miss");
+                    playRandomMissSound();
+                    playMissAnimation(event.target);
+                }
+            }, 1500);  // 1.5 second delay
         }
     });
+
+    // Function to randomly select and play one of the miss sounds
+    function playRandomMissSound() {
+        const randomIndex = Math.floor(Math.random() * missSounds.length);
+        missSounds[randomIndex].play();
+    }
+
+    // Function to randomly select and play one of the hit sounds
+    function playRandomHitSound() {
+        const randomIndex = Math.floor(Math.random() * hitSounds.length);
+        hitSounds[randomIndex].play();
+    }
+
+    // Play hit animation using an MP4 file
+    function playHitAnimation(cell) {
+        // Remove any existing hit animation
+        const existingHit = cell.querySelector(".hit-animation");
+        if (existingHit) {
+            existingHit.remove();
+        }
+        const img = document.createElement("img");
+        img.src = '/static/animations/explosion.gif';
+        img.classList.add("hit-animation");  // Add a class for reference
+        img.style.width = "50px";  // Match cell size
+        img.style.height = "50px";
+        cell.appendChild(img);
+
+        // Remove video after it finishes playing
+        setTimeout(() => {
+            img.remove();
+        }, 1800);  // 1.8 second delay to remove the GIF
+    }
+
+    // Play miss animation using a GIF file
+    function playMissAnimation(cell) {
+        const img = document.createElement("img");
+        img.src = '/static/animations/miss.gif';
+        img.style.width = "50px";  // Match cell size
+        img.style.height = "50px";
+        cell.appendChild(img);
+
+        // Optionally, remove the GIF after a delay (GIFs loop automatically)
+        setTimeout(() => {
+            img.remove();
+        }, 1100);  // 1.1 second delay to remove the GIF
+    }
 });
