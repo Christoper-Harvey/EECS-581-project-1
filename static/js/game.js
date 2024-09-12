@@ -11,8 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let p2Ships = [];
 
     const boards = [
-        document.getElementById("p1self"),
-	    document.getElementById("p2self"),
+        document.getElementById("p1opponent"),
+	    document.getElementById("p2opponent"),
     ]
 
     // Preload audio files
@@ -41,6 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener to start the attack phase
     document.getElementById("next-player-place-ship").addEventListener("click", function () {
         p2PlaceShips = true;
+        // nextTurn(); 
+        document.getElementById("p1-wrapper").style.display = "none";
+        document.getElementById("p2-wrapper").style.display = "flex";
+
         document.getElementById("next-player-place-ship").style.display = "none"; // Hide controls after ship placement
         document.getElementById("start-game").style.display = "block"; // Hide controls after ship placement
         alert("Player 2 place your ships");
@@ -49,14 +53,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener to start the attack phase
     document.getElementById("start-game").addEventListener("click", function () {
         isAttackPhase = true;
+        // nextTurn();
+        document.getElementById("p2-wrapper").style.display = "none";
+        document.getElementById("p1-wrapper").style.display = "flex";
+
         document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
+        document.getElementById("end-turn").style.display = "block"; // Show end turn button
         alert("All ships placed! Attack phase begins.");
     });
 
     // Event listener for swapping turns
     document.getElementById("end-turn").addEventListener("click", function () {
-        turn = nextTurn();
+        turn = nextTurn(); // I added this here so we can use the turn to do functions. This can be removed if not needed.
     });
+
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
         const shipLength = parseInt(document.getElementById("ship-length").value);
@@ -115,21 +125,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Place ship on the board
     function placeShip(row, col, length, direction) {
+        let boardId = p2PlaceShips ? "p2self" : "p1self"; // Determine which player's board
+        const board = document.getElementById(boardId);   // Get the correct board element
+
         for (let i = 0; i < length; i++) {
             const currentRow = direction === "horizontal" ? row : row + i;
             const currentCol = direction === "horizontal" ? col + i : col;
 
-            const cell = document.querySelector(`.cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
+            // Query the correct cell in the specified board
+            const cell = board.querySelector(`.cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
             cell.classList.add("placed");
 
-            // Store the ship's position
-            if (p2PlaceShips){
+            // Store the ship's position in the correct player's array
+            if (p2PlaceShips) {
                 p2Ships.push({ row: currentRow, col: currentCol });
-            } else{
+            } else {
                 p1Ships.push({ row: currentRow, col: currentCol });
             }
         }
     }
+
 
     // Click event handler for attacking
     // const board = document.getElementById("p1self");
@@ -140,10 +155,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const col = event.target.dataset.col;
     
                 canonFire.play();
-                if (board == document.getElementById("p1self")){
+                if (board == document.getElementById("p1opponent")){
                     setTimeout(() => {
                         // Check if the player hits or misses
-                        if (p1Ships.some(ship => ship.row == row && ship.col == col)) {
+                        if (p2Ships.some(ship => ship.row == row && ship.col == col)) {
                             event.target.classList.add("hit");
                             playRandomHitSound();
                             playHitAnimation(event.target);
@@ -156,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     setTimeout(() => {
                         // Check if the player hits or misses
-                        if (p2Ships.some(ship => ship.row == row && ship.col == col)) {
+                        if (p1Ships.some(ship => ship.row == row && ship.col == col)) {
                             event.target.classList.add("hit");
                             playRandomHitSound();
                             playHitAnimation(event.target);

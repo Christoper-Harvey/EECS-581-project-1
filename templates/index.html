@@ -7,17 +7,17 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <h1>Battleship</h1>
+    <h1 style='text-align: center;'>Battleship</h1>
 
     <!-- Board for placing ships and attacking -->
     <div class="board-wrapper" id="p1-wrapper">
         <div class="board" id="p1self"></div>
-	<div class="board" id="p1opponent"></div>
+	    <div class="board" id="p1opponent"></div>
     </div>
 
     <div class="board-wrapper" id="p2-wrapper" style="display: none;">
         <div class="board" id="p2self"></div>
-	<div class="board" id="p2opponent"></div>
+	    <div class="board" id="p2opponent"></div>
     </div>
 
     <!-- Ship Placement Controls -->
@@ -47,7 +47,7 @@
         <button id="next-player-place-ship">Player 1 End Placing Ships</button>
         <button id="start-game" style="display: none;">Start Attack Phase</button>
     </div>
-    <button id="end-turn">End Turn</button>
+    <button id="end-turn" style="display: none;">End Turn</button>
 
     <script src="/static/js/Player.js"></script>
     <script src="/static/js/game.js"></script>
