@@ -6,8 +6,14 @@ p2 = new Player(2) //Player with id 2
 function nextTurn() {
     if(turn == 1) {
         turn = 2;
+        document.getElementById("p1-wrapper").style.display = "none";
+        document.getElementById("p2-wrapper").style.display = "flex";
     } else {
         turn = 1;
+        document.getElementById("p2-wrapper").style.display = "none";
+        document.getElementById("p1-wrapper").style.display = "flex";
     }
     window.alert("Player " + turn + ": Your Turn"); //make fancy later
+
+    return turn
 }

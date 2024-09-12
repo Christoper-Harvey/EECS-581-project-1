@@ -2,8 +2,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const colLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     const rowLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
+    let turn;
+
     let isAttackPhase = false;
-    let placedShips = [];
+    let p2PlaceShips = false;
+
+    let p1Ships = [];
+    let p2Ships = [];
+
+    const boards = [
+        document.getElementById("p1self"),
+	    document.getElementById("p2self"),
+    ]
 
     // Preload audio files
     const canonFire = new Audio('/static/sfx/canonFire.wav');
@@ -28,6 +38,25 @@ document.addEventListener("DOMContentLoaded", function () {
         new Audio('/static/sfx/miss2.wav')
     ];
 
+    // Event listener to start the attack phase
+    document.getElementById("next-player-place-ship").addEventListener("click", function () {
+        p2PlaceShips = true;
+        document.getElementById("next-player-place-ship").style.display = "none"; // Hide controls after ship placement
+        document.getElementById("start-game").style.display = "block"; // Hide controls after ship placement
+        alert("Player 2 place your ships");
+    });
+
+    // Event listener to start the attack phase
+    document.getElementById("start-game").addEventListener("click", function () {
+        isAttackPhase = true;
+        document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
+        alert("All ships placed! Attack phase begins.");
+    });
+
+    // Event listener for swapping turns
+    document.getElementById("end-turn").addEventListener("click", function () {
+        turn = nextTurn();
+    });
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
         const shipLength = parseInt(document.getElementById("ship-length").value);
@@ -51,28 +80,34 @@ document.addEventListener("DOMContentLoaded", function () {
         placeShip(startRow, startCol, shipLength, direction);
     });
 
-    // Event listener to start the attack phase
-    document.getElementById("start-game").addEventListener("click", function () {
-        isAttackPhase = true;
-        document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
-        alert("All ships placed! Attack phase begins.");
-    });
-
     // Check if a ship can be placed on the board
     function canPlaceShip(row, col, length, direction) {
         if (direction === "horizontal") {
             if (col + length > 10) return false;
             for (let i = 0; i < length; i++) {
-                if (placedShips.some(ship => ship.row === row && ship.col === col + i)) {
-                    return false; // A ship is already here
+                if (p2PlaceShips){
+                    if (p2Ships.some(ship => ship.row === row && ship.col === col + i)) {
+                        return false; // A ship is already here
+                    }
+                } else{
+                    if (p1Ships.some(ship => ship.row === row && ship.col === col + i)) {
+                        return false; // A ship is already here
+                    }
                 }
             }
         } else if (direction === "vertical") {
             if (row + length > 10) return false;
             for (let i = 0; i < length; i++) {
-                if (placedShips.some(ship => ship.row === row + i && ship.col === col)) {
-                    return false; // A ship is already here
+                if (p2PlaceShips){
+                    if (p2Ships.some(ship => ship.row === row + i && ship.col === col)) {
+                        return false; // A ship is already here
+                    }
+                } else{
+                    if (p1Ships.some(ship => ship.row === row + i && ship.col === col)) {
+                        return false; // A ship is already here
+                    }
                 }
+
             }
         }
         return true;
@@ -88,39 +123,54 @@ document.addEventListener("DOMContentLoaded", function () {
             cell.classList.add("placed");
 
             // Store the ship's position
-            placedShips.push({ row: currentRow, col: currentCol });
+            if (p2PlaceShips){
+                p2Ships.push({ row: currentRow, col: currentCol });
+            } else{
+                p1Ships.push({ row: currentRow, col: currentCol });
+            }
         }
     }
 
     // Click event handler for attacking
-    const board = document.getElementById("board");
-    board.addEventListener("click", function (event) {
-        if (isAttackPhase && event.target.classList.contains("cell")) {
-            const row = event.target.dataset.row;
-            const col = event.target.dataset.col;
-
-            canonFire.play();
-
-            setTimeout(() => {
-                // Check if the player hits or misses
-                if (placedShips.some(ship => ship.row == row && ship.col == col)) {
-                    event.target.classList.add("hit");
-                    playRandomHitSound();
-                    playHitAnimation(event.target);
+    // const board = document.getElementById("p1self");
+    boards.forEach(board => {
+        board.addEventListener("click", function (event) {
+            if (isAttackPhase && event.target.classList.contains("cell")) {
+                const row = event.target.dataset.row;
+                const col = event.target.dataset.col;
+    
+                canonFire.play();
+                if (board == document.getElementById("p1self")){
+                    setTimeout(() => {
+                        // Check if the player hits or misses
+                        if (p1Ships.some(ship => ship.row == row && ship.col == col)) {
+                            event.target.classList.add("hit");
+                            playRandomHitSound();
+                            playHitAnimation(event.target);
+                        } else {
+                            event.target.classList.add("miss");
+                            playRandomMissSound();
+                            playMissAnimation(event.target);
+                        }
+                    }, 1500);  // 1.5 second delay
                 } else {
-                    event.target.classList.add("miss");
-                    playRandomMissSound();
-                    playMissAnimation(event.target);a
+                    setTimeout(() => {
+                        // Check if the player hits or misses
+                        if (p2Ships.some(ship => ship.row == row && ship.col == col)) {
+                            event.target.classList.add("hit");
+                            playRandomHitSound();
+                            playHitAnimation(event.target);
+                        } else {
+                            event.target.classList.add("miss");
+                            playRandomMissSound();
+                            playMissAnimation(event.target);
+                        }
+                    }, 1500);  // 1.5 second delay
                 }
-            }, 1500);  // 1.5 second delay
-
-            setTimeout(() => {
-                //change turn - I put this on a timer for now but we can change later
-                nextTurn();
-            }, 5000);
-        }
+            }
+        });
     });
-
+    
     // Function to randomly select and play one of the miss sounds
     function playRandomMissSound() {
         const randomIndex = Math.floor(Math.random() * missSounds.length);
@@ -133,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hitSounds[randomIndex].play();
     }
 
-    // Play hit animation using an MP4 file
+    // Play hit animation using a GIF file
     function playHitAnimation(cell) {
         // Remove any existing hit animation
         const existingHit = cell.querySelector(".hit-animation");
@@ -147,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
         img.style.height = "50px";
         cell.appendChild(img);
 
-        // Remove video after it finishes playing
+        // Optionally, remove the GIF after a delay (GIFs loop automatically)
         setTimeout(() => {
             img.remove();
         }, 1800);  // 1.8 second delay to remove the GIF

@@ -1,7 +1,9 @@
 
 .board-wrapper {
-    display: inline-block;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 .board {
     display: grid;
@@ -26,7 +28,10 @@
     background-color: red;
 }
 .miss {
-    background-color: white;
+    background-color: black;
+}
+.placed {
+    background-color: gray;
 }
 .row-label, .col-label {
     background-color: lightgray;
