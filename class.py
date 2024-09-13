@@ -26,22 +26,32 @@ class Player():
 
         # Deincriments hit points of given ship and returns if the user sunk the ship
         def hit(self):
-            # Deincriments and returns prompt
+            # Deincriments and returns hit or sunk
             self.hp -= 1
             if self.hp > 0:
-                return 1
+                return 1 # Hit
             else:
-                return 0
+                return 0 # Sunk
     
             
         def set_pos(self, cords):
             self.pos = cords
-    
+     
     # Player instance
     def __init__(self, id):
         self.id = id
-        self.ships = [a = self.Ship('A'), b = self.Ship('B'), c = self.Ship('C'), s = self.Ship('S'), d = self.Ship('D')]
+        self.ships = self.createShips()
 
+    # Creates the 5 battleships
+    def createShips(self):
+        a = self.Ship('A')
+        b = self.Ship('B')
+        c = self.Ship('C')
+        s = self.Ship('S')
+        d = self.Ship('D')
+        return [a,b,c,s,d]
+
+    # Checks status of players ships
     def status(self):
         if len(self.ships) == 0:
             return "You lost."
@@ -65,7 +75,8 @@ class Player():
                 break
         # Returns prompt whether the user sunk the ship
         return hit, ship
-            
+
+    # Attacks other players ships and returns result of attacks   
     def attack(self, otherPlayer, cord):
         hit, ship = otherPlayer.check_pos(cord)
         match hit:
