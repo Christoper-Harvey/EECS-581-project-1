@@ -1,10 +1,8 @@
 class Player {
-    myBoard = [[]];//matrix for this player to view their own ships and hits against them. "Bottom board"
-    oppBoard = [[]];//matrix for this player to view their shots against the opponent. "Top board"
-    shipsLeft;
+    ships = [];//array containing player's ships
+    shipsLeft = 0;//tracks how many ships this player has left
     constructor(id) {
         this._id = id;
-        //initalize boards
     }
 
     //player id getter
@@ -15,5 +13,10 @@ class Player {
     //shipsLeft getter
     get shipsLeft() {
         return this._shipsLeft;
+    }
+
+    //ships getter
+    get ships() {
+        return this._ships;
     }
 }
