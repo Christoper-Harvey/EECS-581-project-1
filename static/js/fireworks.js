@@ -5,6 +5,13 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 window.addEventListener("resize", () => [canvas.width, canvas.height] = [window.innerWidth, window.innerHeight], false);
 
+// Sound effects for fireworks
+const fireworks1 = new Audio('/static/sfx/fireworks1.wav');
+const fireworks2 = new Audio('/static/sfx/fireworks2.wav');
+
+// fireworks1.loop = true;
+// fireworks2.loop = true;
+
 class Firework {
     constructor() {
         this.x = Math.random() * canvas.width;
@@ -49,6 +56,20 @@ class Particle {
 const fireworks = [new Firework()];
 const particles = [];
 
+// Randomly play fireworks sounds
+function playFireworksSounds() {
+    const randomTime = Math.random() * 300 + 50;  // Random interval between 2 and 5 seconds
+
+    setTimeout(() => {
+        if (Math.random() > 0.5) {
+            fireworks1.play();
+        } else {
+            fireworks2.play();
+        }
+        playFireworksSounds();  // Recursively schedule the next sound
+    }, randomTime);
+}
+
 function animate() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -75,4 +96,5 @@ function animate() {
 window.startFireworks = function() {
     document.getElementById("fireworksCanvas").style.display = "block";  // Show the canvas
     animate();
+    playFireworksSounds();
 };

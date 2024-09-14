@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // document.getElementById("start-game").disabled = true;  // Disable until Player 2 places all ships
             document.getElementById("start-game").style.display = "inline";
             updateShipPlacementStatus();  // Reset status for Player 2
-            alert("Player 2, place your ships!");
+            // alert("Player 2, place your ships!");
         }
     });
 
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
             document.getElementById("end-turn").style.display = "block"; // Show end turn button
-            alert("All ships placed! Attack phase begins.");
+            // alert("All ships placed! Attack phase begins.");
         }
         else {
             window.alert("You must place at least one ship.");
