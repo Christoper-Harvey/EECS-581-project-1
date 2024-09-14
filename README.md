@@ -113,3 +113,8 @@ Once the web app is running, the game can be accessed in your browser. Two playe
 
 - **`Ship - set_pos(cords)`**:
   Sets the list of coordinates the ships are placed on the front end
+
+---
+
+## License
+[MIT License](LICENSE)
