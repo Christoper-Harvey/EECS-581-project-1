@@ -7,6 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let isAttackPhase = false;
     let p2PlaceShips = false;
 
+    let p1hits = 0;
+    let p1miss = 0;
+    let p2hits = 0;
+    let p2miss = 0;
+
     const boards = [
         document.getElementById("p1opponent"),
 	    document.getElementById("p2opponent"),
@@ -190,6 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             // Check if the cell has already been hit
                             if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
                                 hasFired = true;
+				p1hits++;
+				document.getElementById('p1-hits').innerText = p1hits;
                                 canonFire.play();
                                 setTimeout(() => {
 
@@ -207,6 +214,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 canonFire.play();
                                 setTimeout(() => {
                                     event.target.classList.add("miss");
+				    p1miss++;
+				    document.getElementById('p1-miss').innerText = p1miss;
                                     playRandomMissSound();
                                     playMissAnimation(event.target);
                                 }, 1500);
@@ -218,6 +227,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Check if the cell has already been hit
                         if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
                             hasFired = true;
+			    p2hits++;
+			    document.getElementById('p2-hits').innerText = p2hits;
                             canonFire.play();
                             setTimeout(() => {
                                 event.target.classList.add("hit");
@@ -231,6 +242,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Check if the cell has already been missed
                         if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
                             hasFired = true;
+			    p2miss++;
+			    document.getElementById('p2-miss').innerText = p2miss;
                             canonFire.play();
                             setTimeout(() => {
                                 event.target.classList.add("miss");
