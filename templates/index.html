@@ -44,31 +44,43 @@
     <!-- Ship Placement Controls -->
     <div id="controls">
         <h2>Place Your Ships</h2>
-        <label for="ship-length">Ship Length:</label>
+        <label id="ship-length-label" for="ship-length">Number of Ships:</label>
         <select id="ship-length">
-            <option value="2">Destroyer (2 units)</option>
-            <option value="3">Submarine (3 units)</option>
-            <option value="4">Battleship (4 units)</option>
-            <option value="5">Carrier (5 units)</option>
+            <option value="1">1: 1x1</option>
+            <option value="2">2: 1x1, 1x2</option>
+            <option value="3">3: 1x1, 1x2, 1x3</option>
+            <option value="4">4: 1x1, 1x2, 1x3, 1x4</option>
+            <option value="5">5: 1x1, 1x2, 1x3, 1x4, 1x5</option>
         </select>
+
+        <p id="ship-placement-status"></p>
+
+        <button id="shipConfirm">Confirm</button>
         <br><br>
 
-        <label for="start-coord">Starting Coordinate (e.g., A1):</label>
-        <input type="text" id="start-coord" placeholder="A1">
+        <label for="start-coord" id="start-coord-label" style="display: none">Starting Coordinate (e.g., A1):</label>
+        <input type="text" id="start-coord" placeholder="A1" style="display: none">
         <br><br>
 
-        <label for="direction">Direction:</label>
-        <select id="direction">
+        <label for="direction" id="direction-label" style="display: none">Direction:</label>
+        <select id="direction" style="display: none">
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
         </select>
         <br><br>
 
-        <button id="place-ship">Place Ship</button>
-        <button id="next-player-place-ship">Player 1 End Placing Ships</button>
-        <button id="start-game" style="display: none;">Start Attack Phase</button>
+        <button id="place-ship" style="display: none;">Place Ship</button>
+        <button id="next-player-place-ship" style="display: none;" disabled>Player 1 End Placing Ships</button>
+        <button id="start-game" style="display: none;" disabled>Start Attack Phase</button>
     </div>
     <button id="end-turn" style="display: none;">End Turn</button>
+
+    <div id="win-modal" class="modal">
+        <div class="modal-content">
+            <span id="winner-message"></span>
+            <button id="play-again-button">Play Again</button>
+        </div>
+    </div>
 
     <canvas id="fireworksCanvas"></canvas>
     

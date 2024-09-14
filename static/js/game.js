@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let p2hits = 0;
     let p2miss = 0;
 
+    let numShips = 0;
+    let shipsToPlace = [];
+    let currentShipIndex = 0;
+
     const boards = [
         document.getElementById("p1opponent"),
 	    document.getElementById("p2opponent"),
@@ -35,20 +39,57 @@ document.addEventListener("DOMContentLoaded", function () {
         new Audio('/static/sfx/miss2.wav')
     ];
 
+    document.getElementById("shipConfirm").addEventListener("click", function (){
+
+        numShips = parseInt(document.getElementById("ship-length").value);
+
+        document.getElementById("shipConfirm").style.display = "none";
+        document.getElementById("ship-length").style.display = "none";
+        document.getElementById("ship-length-label").style.display = "none";
+
+        document.getElementById("start-coord").style.display = "inline";
+        document.getElementById("start-coord-label").style.display = "inline";
+
+        document.getElementById("direction").style.display = "inline";
+        document.getElementById("direction-label").style.display = "inline";
+
+        document.getElementById("place-ship").style.display = "inline";
+        document.getElementById("next-player-place-ship").style.display = "inline";
+
+        for (let i = 1; i <= numShips; i++) {
+            shipsToPlace.push(i);  // Ships will be placed from size 1x1 up to 1xN
+        }
+        updateShipPlacementStatus();
+    });
+
+    // Function to update ship placement status
+    function updateShipPlacementStatus() {
+        const statusElement = document.getElementById("ship-placement-status");
+        if (currentShipIndex < shipsToPlace.length) {
+            statusElement.innerText = `Place ship of size ${shipsToPlace[currentShipIndex]}`;
+        } else {
+            statusElement.innerText = "All ships placed!";
+            document.getElementById("next-player-place-ship").disabled = false;
+            if (p2PlaceShips){
+                document.getElementById("start-game").disabled = false;
+            }
+        }
+    }
+
     // Event listener to start the attack phase
     document.getElementById("next-player-place-ship").addEventListener("click", function () {
-        if (p1.shipsLeft > 0) {
+        if (currentShipIndex >= shipsToPlace.length) {
+            // Player 1 is done, switch to Player 2
             p2PlaceShips = true;
-            // nextTurn(); 
+            currentShipIndex = 0;  // Reset for Player 2
+
             document.getElementById("p1-wrapper").style.display = "none";
             document.getElementById("p2-wrapper").style.display = "flex";
-
-            document.getElementById("next-player-place-ship").style.display = "none"; // Hide controls after ship placement
-            document.getElementById("start-game").style.display = "inline"; // Hide controls after ship placement
-            alert("Player 2 place your ships");
-        }
-        else {
-            window.alert("You must place at least one ship.");
+            document.getElementById("next-player-place-ship").style.display = "none";
+            // document.getElementById("start-game").disabled = true;  // Disable until Player 2 places all ships
+            document.getElementById("start-game").style.display = "inline";
+            updateShipPlacementStatus();  // Reset status for Player 2
+            alert("Player 2, place your ships!");
         }
     });
 
@@ -89,7 +130,8 @@ document.addEventListener("DOMContentLoaded", function () {
             victoryCry.play();
             victoryTrumpet.play();
             setTimeout(() => {
-                window.alert("PLAYER 1 WINS!");
+                // window.alert("PLAYER 1 WINS!");
+                showWinnerModal('Player 1')
             }, 100);
         } else if (p1.shipsLeft == 0) {
             //p2 wins
@@ -98,22 +140,33 @@ document.addEventListener("DOMContentLoaded", function () {
             victoryCry.play();
             victoryTrumpet.play();
             setTimeout(() => {
-                window.alert("PLAYER 2 WINS!");
+                // window.alert("PLAYER 2 WINS!");
+                showWinnerModal('Player 2')
             }, 100);
         }
     }
 
+    function showWinnerModal(winner) {
+        const modal = document.getElementById("win-modal");
+        const winnerMessage = document.getElementById("winner-message");
+        winnerMessage.innerText = `${winner} WINS!`;
+        modal.style.display = "flex";  // Show the modal
+    }
+
+    document.getElementById("play-again-button").addEventListener("click", function () {
+        location.reload();  // Refresh the page to start over
+    });
+
 
     // // Function to stop fireworks
     // function stopFireworks() {
-    //     const fireworksWrapper = document.getElementById("fireworks-wrapper");
-    //     fireworksWrapper.style.display = "none"; // Hide the fireworks
+    //     document.getElementById("fireworksCanvas").style.display = "none";
     // }
 
 
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
-        const shipLength = parseInt(document.getElementById("ship-length").value);
+        const shipLength = shipsToPlace[currentShipIndex];
         const startCoord = document.getElementById("start-coord").value.toUpperCase();
         const direction = document.getElementById("direction").value;
 
@@ -131,7 +184,15 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Place ship and move to the next ship
         placeShip(startRow, startCol, shipLength, direction);
+        currentShipIndex++;
+        updateShipPlacementStatus();
+
+        // Check if all ships are placed
+        if (currentShipIndex >= shipsToPlace.length) {
+            document.getElementById("next-player-place-ship").disabled = false;
+        }
     });
 
     // Check if a ship can be placed on the board
@@ -206,16 +267,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             // Check if the cell has already been hit
                             if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
                                 hasFired = true;
-				p1hits++;
-				document.getElementById('p1-hits').innerText = p1hits;
                                 canonFire.play();
                                 setTimeout(() => {
-
                                     event.target.classList.add("hit");
                                     playRandomHitSound();
                                     playHitAnimation(event.target);
                                     p2.shipsLeft--;
                                     checkWin();
+                                    p1hits++;
+                                    document.getElementById('p1-hits').innerText = p1hits;
                                 }, 1500);
                             }
                         } else {
@@ -225,10 +285,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                 canonFire.play();
                                 setTimeout(() => {
                                     event.target.classList.add("miss");
-				    p1miss++;
-				    document.getElementById('p1-miss').innerText = p1miss;
                                     playRandomMissSound();
                                     playMissAnimation(event.target);
+                                    p1miss++;
+                                    document.getElementById('p1-miss').innerText = p1miss;
                                 }, 1500);
                             }
                         }
@@ -238,8 +298,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Check if the cell has already been hit
                         if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
                             hasFired = true;
-			    p2hits++;
-			    document.getElementById('p2-hits').innerText = p2hits;
                             canonFire.play();
                             setTimeout(() => {
                                 event.target.classList.add("hit");
@@ -247,19 +305,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                 playHitAnimation(event.target);
                                 p1.shipsLeft--;
                                 checkWin();
+                                p2hits++;
+                                document.getElementById('p2-hits').innerText = p2hits;
                             }, 1500);
                         }
                     } else {
                         // Check if the cell has already been missed
                         if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
                             hasFired = true;
-			    p2miss++;
-			    document.getElementById('p2-miss').innerText = p2miss;
                             canonFire.play();
                             setTimeout(() => {
                                 event.target.classList.add("miss");
                                 playRandomMissSound();
                                 playMissAnimation(event.target);
+                                p2miss++;
+                                document.getElementById('p2-miss').innerText = p2miss;
                             }, 1500);
                         }
                     }                        

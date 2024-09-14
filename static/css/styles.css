@@ -74,6 +74,48 @@ body {
     margin: 0 10px;
 }
 
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0); /* Black background with transparency */
+    color: goldenrod;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 50%;
+}
+
+#winner-message {
+    font-size: 32px;
+}
+
+#play-again-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#play-again-button:hover {
+    background-color: #218838;
+}
+
 #fireworksCanvas {
     display: none; /* Hide the canvas initially */
     position: fixed;
