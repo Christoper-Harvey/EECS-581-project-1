@@ -18,11 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const victoryCry = new Audio('/static/sfx/victoryCry.wav');
     const victoryTrumpet = new Audio('/static/sfx/victoryTrumpet.wav');
 
-    // This will be used to play the victory theme
-    // endGame.play(); // Used for the final hit, big sound
-    // victoryTrumpet.play(); // the two below play at the same time.
-    // victoryCry.play();
-
     // Preload miss sounds
     const hitSounds = [
         new Audio('/static/sfx/hitLarge.wav'),
@@ -68,6 +63,37 @@ document.addEventListener("DOMContentLoaded", function () {
         turn = nextTurn(); // I added this here so we can use the turn to do functions. This can be removed if not needed.
         hasFired = false;
     });
+
+    //checks if a player has won and executes end game
+    function checkWin() {
+        if (p2.shipsLeft == 0) {
+            //p1 wins
+            startFireworks();
+            endGame.play();
+            victoryCry.play();
+            victoryTrumpet.play();
+            setTimeout(() => {
+                window.alert("PLAYER 1 WINS!");
+            }, 100);
+        } else if (p1.shipsLeft == 0) {
+            //p2 wins
+            startFireworks();
+            endGame.play();
+            victoryCry.play();
+            victoryTrumpet.play();
+            setTimeout(() => {
+                window.alert("PLAYER 2 WINS!");
+            }, 100);
+        }
+    }
+
+
+    // // Function to stop fireworks
+    // function stopFireworks() {
+    //     const fireworksWrapper = document.getElementById("fireworks-wrapper");
+    //     fireworksWrapper.style.display = "none"; // Hide the fireworks
+    // }
+
 
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
@@ -155,41 +181,64 @@ document.addEventListener("DOMContentLoaded", function () {
     boards.forEach(board => {
         board.addEventListener("click", function (event) {
             if (isAttackPhase && !hasFired && event.target.classList.contains("cell")) {
-                hasFired = true;
                 const row = event.target.dataset.row;
                 const col = event.target.dataset.col;
     
-                canonFire.play();
                 if (board == document.getElementById("p1opponent")){
-                    setTimeout(() => {
                         // Check if the player hits or misses
                         if (p2.ships.some(ship => ship.row == row && ship.col == col)) {
-                            event.target.classList.add("hit");
-                            playRandomHitSound();
-                            playHitAnimation(event.target);
-                            p2.shipsLeft--;
-                            checkWin();
+                            // Check if the cell has already been hit
+                            if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
+                                hasFired = true;
+                                canonFire.play();
+                                setTimeout(() => {
+
+                                    event.target.classList.add("hit");
+                                    playRandomHitSound();
+                                    playHitAnimation(event.target);
+                                    p2.shipsLeft--;
+                                    checkWin();
+                                }, 1500);
+                            }
                         } else {
-                            event.target.classList.add("miss");
-                            playRandomMissSound();
-                            playMissAnimation(event.target);
+                            // Check if the cell has already been missed
+                            if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
+                                hasFired = true;
+                                canonFire.play();
+                                setTimeout(() => {
+                                    event.target.classList.add("miss");
+                                    playRandomMissSound();
+                                    playMissAnimation(event.target);
+                                }, 1500);
+                            }
                         }
-                    }, 1500);  // 1.5 second delay
                 } else {
-                    setTimeout(() => {
-                        // Check if the player hits or misses
-                        if (p1.ships.some(ship => ship.row == row && ship.col == col)) {
-                            event.target.classList.add("hit");
-                            playRandomHitSound();
-                            playHitAnimation(event.target);
-                            p1.shipsLeft--;
-                            checkWin();
-                        } else {
-                            event.target.classList.add("miss");
-                            playRandomMissSound();
-                            playMissAnimation(event.target);
+                    // Check if the player hits or misses
+                    if (p1.ships.some(ship => ship.row == row && ship.col == col)) {
+                        // Check if the cell has already been hit
+                        if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
+                            hasFired = true;
+                            canonFire.play();
+                            setTimeout(() => {
+                                event.target.classList.add("hit");
+                                playRandomHitSound();
+                                playHitAnimation(event.target);
+                                p1.shipsLeft--;
+                                checkWin();
+                            }, 1500);
                         }
-                    }, 1500);  // 1.5 second delay
+                    } else {
+                        // Check if the cell has already been missed
+                        if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
+                            hasFired = true;
+                            canonFire.play();
+                            setTimeout(() => {
+                                event.target.classList.add("miss");
+                                playRandomMissSound();
+                                playMissAnimation(event.target);
+                            }, 1500);
+                        }
+                    }                        
                 }
             }
             else if (isAttackPhase && event.target.classList.contains("cell") && hasFired) {

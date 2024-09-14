@@ -18,14 +18,3 @@ function nextTurn() {
 
     return turn
 }
-
-//checks if a player has won and executes end game
-function checkWin() {
-    if (p1.shipsLeft == 0) {
-        //p1 wins
-        setTimeout( () => window.alert("PLAYER 1 WINS!"), 2000);
-    } else if (p2.shipsLeft == 0) {
-        //p2 wins
-        setTimeout( () => window.alert("PLAYER 2 WINS!"), 2000);
-    }
-}
