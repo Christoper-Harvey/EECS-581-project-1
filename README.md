@@ -46,6 +46,7 @@ Once the web app is running, the game can be accessed in your browser. Two playe
 - **`Player.js`**: Manages player-specific actions, like placing ships and taking turns.
 - **`turnSystem.js`**: Controls the turn-based system and switches between players.
 - **`styles.css`**: Contains all the CSS for the visual styling of the game.
+- **`class.py`**: Backend Python class representation of the game state and player interaction
 
 ---
 
@@ -87,3 +88,28 @@ Once the web app is running, the game can be accessed in your browser. Two playe
 
 - **`toggleOpponentView(isPlayer1Turn)`**:  
   Toggles the view of the boards depending on which player is taking their turn.
+
+### `class.py`
+- **`Player - __init__(id)`**:
+  Sets the player ID and intial ships for the player object
+
+- **`Player - createShips()`**:
+  Initializes the battleship objects on instance of player object
+
+- **`Player - status()`**:
+  Returns the current number and which ships are left to a given player
+
+- **`Player - check_pos(cord)`**:
+  Given a coordinate, returns if the attack is a miss, hit or sink as well as the ship if hit
+
+- **`Player - attack(otherPlayer, cord)`**:
+  Calls check_pos against another player
+
+- **`Ship - __init__(type, pos)`**:
+  Defines the type of ship instantied which sets the name and hp while the position is set from the frontend
+
+- **`Ship - hit()`**:
+  When a hit occurs on a ship, decreases hp and returns if it is a sink or not
+
+- **`Ship - set_pos(cords)`**:
+  Sets the list of coordinates the ships are placed on the front end
