@@ -32,26 +32,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to start the attack phase
     document.getElementById("next-player-place-ship").addEventListener("click", function () {
-        p2PlaceShips = true;
-        // nextTurn(); 
-        document.getElementById("p1-wrapper").style.display = "none";
-        document.getElementById("p2-wrapper").style.display = "flex";
+        if (p1.shipsLeft > 0) {
+            p2PlaceShips = true;
+            // nextTurn(); 
+            document.getElementById("p1-wrapper").style.display = "none";
+            document.getElementById("p2-wrapper").style.display = "flex";
 
-        document.getElementById("next-player-place-ship").style.display = "none"; // Hide controls after ship placement
-        document.getElementById("start-game").style.display = "inline"; // Hide controls after ship placement
-        alert("Player 2 place your ships");
+            document.getElementById("next-player-place-ship").style.display = "none"; // Hide controls after ship placement
+            document.getElementById("start-game").style.display = "inline"; // Hide controls after ship placement
+            alert("Player 2 place your ships");
+        }
+        else {
+            window.alert("You must place at least one ship.");
+        }
+
+        
     });
 
     // Event listener to start the attack phase
     document.getElementById("start-game").addEventListener("click", function () {
-        isAttackPhase = true;
-        // nextTurn();
-        document.getElementById("p2-wrapper").style.display = "none";
-        document.getElementById("p1-wrapper").style.display = "flex";
+        if (p2.shipsLeft > 0) {
+            isAttackPhase = true;
+            // nextTurn();
+            document.getElementById("p2-wrapper").style.display = "none";
+            document.getElementById("p1-wrapper").style.display = "flex";
 
-        document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
-        document.getElementById("end-turn").style.display = "block"; // Show end turn button
-        alert("All ships placed! Attack phase begins.");
+            document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
+            document.getElementById("end-turn").style.display = "block"; // Show end turn button
+            alert("All ships placed! Attack phase begins.");
+        }
+        else {
+            window.alert("You must place at least one ship.");
+        }
+
     });
 
     // Event listener for swapping turns
