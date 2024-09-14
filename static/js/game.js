@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const victoryCry = new Audio('/static/sfx/victoryCry.wav');
     const victoryTrumpet = new Audio('/static/sfx/victoryTrumpet.wav');
 
+    const champions = new Audio('/static/sfx/champions.wav');
+
     // Preload miss sounds
     const hitSounds = [
         new Audio('/static/sfx/hitLarge.wav'),
@@ -133,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // window.alert("PLAYER 1 WINS!");
                 showWinnerModal('Player 1')
             }, 100);
+            setTimeout(() => {champions.play();}, 5000);
         } else if (p1.shipsLeft == 0) {
             //p2 wins
             startFireworks();
@@ -143,6 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // window.alert("PLAYER 2 WINS!");
                 showWinnerModal('Player 2')
             }, 100);
+            setTimeout(() => {champions.play();}, 5000);
         }
     }
 
