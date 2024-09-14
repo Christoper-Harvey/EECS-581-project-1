@@ -46,7 +46,6 @@ Once the web app is running, the game can be accessed in your browser. Two playe
 - **`Player.js`**: Manages player-specific actions, like placing ships and taking turns.
 - **`turnSystem.js`**: Controls the turn-based system and switches between players.
 - **`styles.css`**: Contains all the CSS for the visual styling of the game.
-- **`class.py`**: Backend Python class representation of the game state and player interaction
 
 ---
 
@@ -113,8 +112,3 @@ Once the web app is running, the game can be accessed in your browser. Two playe
 
 - **`Ship - set_pos(cords)`**:
   Sets the list of coordinates the ships are placed on the front end
-
----
-
-## License
-[MIT License](LICENSE)
