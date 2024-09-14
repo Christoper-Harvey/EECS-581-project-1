@@ -87,8 +87,3 @@ Once the web app is running, the game can be accessed in your browser. Two playe
 
 - **`toggleOpponentView(isPlayer1Turn)`**:  
   Toggles the view of the boards depending on which player is taking their turn.
-
----
-
-## License
-[MIT License](LICENSE)
