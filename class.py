@@ -1,7 +1,9 @@
+import json
+
 class Player():
     # Subclass for each ship a player has
     class Ship():
-        def __inti__(self, type, pos=[('A',1)]):
+        def __inti__(self, type, pos=["A1"]):
             # Types: Aircraft (A), Battleship (B), Crusier (C), Submarine (S), Destroyer (D)
             self.type = type
             # Identifies the type of ship and assigns the correct name and hit point value
@@ -32,7 +34,6 @@ class Player():
                 return 1 # Hit
             else:
                 return 0 # Sunk
-    
             
         def set_pos(self, cords):
             self.pos = cords
@@ -41,6 +42,8 @@ class Player():
     def __init__(self, id):
         self.id = id
         self.ships = self.createShips()
+        self.hits = []
+        self.misses = []
 
     # Creates the 5 battleships
     def createShips(self):
@@ -62,27 +65,69 @@ class Player():
         return status
     
     # Checks the coordinates of launch removing the available point and calls hit or returns miss prompt
-    # Cord is a tuple type
-    def check_pos(self, cord=('A',1)):
+    def check_pos(self, cord="A1"):
         # Assume missed
         hit = -1
         ship = None
         # Checks if any of the players ships are hit
-        for ship in self.ships:
+        for i, ship in enumerate(self.ships):
             if cord in ship.pos:
                 ship.pos.remove(cord)
-                hit =  self.hit()
+                hit =  self.ships[i].hit()
                 break
+
+        # Removes sunked ships
+        if hit == 0:
+            self.ships.pop(i)
         # Returns prompt whether the user sunk the ship
         return hit, ship
 
-    # Attacks other players ships and returns result of attacks   
+    # Attacks other players ships, records the hit/miss and returns result of attacks   
     def attack(self, otherPlayer, cord):
         hit, ship = otherPlayer.check_pos(cord)
         match hit:
             case -1:
+                self.misses.append(cord)
                 return "Miss."
             case 0:
+                self.hits.append(cord)
                 return f"Sunk {ship.name}."
             case 1:
+                self.hits.append(cord)
                 return f"Hit {ship.name}."
+
+    # Makes JSON representation of the players game state with ID and ship hit points     
+    def make_state(self):
+        # Sets null state to each of the ship variables if not in self.ships list
+        a = 0
+        b = 0
+        c = 0
+        s = 0
+        d = 0
+        # Iterates through remaining ships and updates the current hp of each ship
+        for ship in self.ships:
+            match ship.type:
+                case 'A': # Aircraft carrier
+                    a = ship.hp
+                case 'B': # Battleship
+                    b = ship.hp
+                case 'C': # Crusier
+                    c = ship.hp
+                case 'S': # Submarine
+                    s = ship.hp
+                case 'D': # Destroyer
+                    d = ship.hp
+
+        # Define JSON object to pass 
+        state = {"ID":self.id,
+                 "Aircraft":a,
+                 "Battleship":b,
+                 "Crusier":c,
+                 "Submarine":s,
+                 "Destroyer":d,
+                 "Hits":self.hits,
+                 "Misses":self.misses
+                }
+        # Convert to JSON
+        state = json.dumps(state)
+        return state
