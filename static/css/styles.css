@@ -1,3 +1,44 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+#pass-screen {
+    display: none; /* Hidden initially */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-color: rgb(0, 0, 0); /* Semi-transparent background */
+    color: white;
+    z-index: 10000; /* High z-index to ensure it's on top of everything */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#pass-screen h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+#pass-screen button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #ff6347; /* Button color */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#pass-screen button:hover {
+    background-color: #e55342; /* Slightly darker hover effect */
+}
+
 
 /* Game grid layout */
 .game-grid {
@@ -8,17 +49,32 @@
     justify-items: center;
     align-items: center;
 }
-
-/* Middle section for player stats */
+/* Middle section */
 .middle-section {
     grid-column: 2; /* Middle column */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 94%;
+    width: 200px;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 10px;
+}
+/* Label for game state */
+.game-state-label {
+    position: relative;
+    font-size: 24px;
+    font-weight: bold;
+    text-wrap: nowrap;
+    color: red;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    z-index: 20;
+}
+#scoreboard {
+    margin: 20px 0;
 }
 
 #text-alert {
@@ -27,19 +83,6 @@
     font-size: 17px;
     font-weight: bold;
 }
-
-.player-info {
-    margin: 20px 0;
-}
-
-.player-info h3 {
-    margin-bottom: 10px;
-}
-
-.middle-section p {
-    margin: 5px 0;
-}
-
 /* Board styles */
 .board {
     display: grid;
@@ -47,97 +90,79 @@
     grid-template-rows: 30px repeat(10, 50px);
     gap: 5px;
 }
-
 .self {
     grid-column: 1; /* Place the controls in column 3 */
     grid-row: 1; /* Row 1 */
 }
-
 .op {
     grid-column: 3; /* Place the controls in column 3 */
     grid-row: 1; /* Row 1 */
 }
-
-/* Controls placed in column 3 and row 1 */
-#controls {
-    grid-column: 3; /* Place the controls in column 3 */
-    grid-row: 1; /* Row 1 */
-    width: 250px;
-    padding: 20px;
-    background-color: #f0f0f0;  /* Light gray background */
-    border-radius: 15px;  /* Rounded edges */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  /* Add subtle shadow */
-    text-align: center;
-    z-index: 10; 
-    margin-top: 20px;
-}
-
-/* Styling for the form elements inside the controls */
-#controls select, #controls button {
-    margin-top: 10px;
-    width: 100%;
-}
-
-/* Style for Player turn label */
-.player-turn-label {
-    position: relative;
-    font-size: 28px;
-    font-weight: bold;
-    text-wrap: nowrap;
-    color: red;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    margin-bottom: 20px;
-    z-index: 20;
-}
-
-/* Style for Your Board label */
-#your-board-label {
-    grid-column: 1; /* Place the controls in column 3 */
-    grid-row: 1; /* Row 1 */
-    font-size: 24px;
-    font-weight: bold;
-    color: red; 
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    z-index: 20; /* Ensure it's on top of the board */
-    position: relative;
-    top: -330px; /* Shift the label upwards */
-}
-
-/* Style for Opponent's Board label */
-#opponent-board-label {
-    grid-column: 3; /* Place the controls in column 3 */
-    grid-row: 1; /* Row 1 */
-    font-size: 24px;
-    font-weight: bold;
-    color: red; 
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    z-index: 20; /* Ensure it's on top of the board */
-    position: relative;
-    top: -330px; /* Shift the label upwards */
-}
-
-
 .cell {
     width: 50px;
     height: 50px;
-    background-color: lightblue;
     text-align: center;
     line-height: 50px;
     cursor: pointer;
     border: 1px solid black;
     position: relative;
 }
+
+/* Style for Player 1's board (blue theme) */
+#p1self .cell {
+    background-color: rgb(173, 216, 230);
+}
+#p1self .row-label, #p1self .col-label {
+    background-color: #87ceeb; /* Lighter blue for labels */
+    color: white;
+}
+/* Style for Player 2's board (red theme) */
+#p2self .cell {
+    background-color: lightcoral;
+}
+#p2self .row-label, #p2self .col-label {
+    background-color: #ff6347; /* Lighter red for labels */
+    color: white;
+}
+/* Style for Player 1's opponent board (red theme) */
+#p1opponent .cell {
+    background-color: rgb(240, 128, 128);
+}
+#p1opponent .row-label, #p1opponent .col-label {
+    background-color: #ff6347; /* Lighter red for labels */
+    color: white;
+}
+#p1opponent .cell:hover {
+    background-color: rgba(240, 128, 128, 0.5) !important; /* A subtle hover effect */
+}
+/* Style for Player 2's opponent board (blue theme) */
+#p2opponent .cell {
+    background-color: lightblue;
+}
+#p2opponent .row-label, #p2opponent .col-label {
+    background-color: #87ceeb; /* Lighter blue for labels */
+    color: white;
+}
+#p2opponent .cell:hover {
+    background-color: rgba(173, 216, 230, 0.5) !important; /* A subtle hover effect */
+}
+/* Red/blue dot for hits and misses */
+.hit-self::before {
+    background-color: red;
+}
+.miss-self::before {
+    background-color: black;
+}
 .label {
     text-align: center;
     line-height: 30px;
 }
 .hit {
-    background-color: red;
+    background-color: red !important;
 }
 .miss {
-    background-color: black;
+    background-color: black !important;
 }
-
 /* Add red dot for hit */
 .hit-self::before {
     content: "";
@@ -151,7 +176,6 @@
     transform: translate(-50%, -50%); /* Center the dot */
     z-index: 10;  /* Ensure the dot is above the background */
 }
-
 /* Add black dot for miss */
 .miss-self::before {
     content: "";
@@ -165,54 +189,10 @@
     transform: translate(-50%, -50%); /* Center the dot */
     z-index: 10;  /* Ensure the dot is above the background */
 }
-
 .placed {
-    background-color: gray;
+    background-color: gray !important;
     position: relative;
 }
-
-.row-label, .col-label {
-    background-color: lightgray;
-    line-height: 30px;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px auto;
-    width: 80%; /* Adjust width to fit within the page */
-}
-
-.header {
-    flex-basis: 100%;
-    margin-bottom: 20px;
-}
-
-.player {
-    flex-basis: 45%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hits-misses {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-}
-
-.hits-misses span {
-    margin: 0 10px;
-}
-
-
 /* Modal styles */
 .modal {
     display: none; /* Hidden by default */
@@ -227,7 +207,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 .modal-content {
     background-color: rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -235,31 +214,6 @@ body {
     text-align: center;
     width: 50%;
 }
-
-#winner-message {
-    font-size: 32px;
-}
-
-#play-again-button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-#end-turn{
-    background-color: black;
-    color: white;
-}
-
-#play-again-button:hover {
-    background-color: #218838;
-    color: white;
-}
-
 #fireworksCanvas {
     display: none; /* Hide the canvas initially */
     position: fixed;

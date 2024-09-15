@@ -7,77 +7,72 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <div class="header">
-        <h1>Battleship</h1>
-    </div>
-
-
     <div class="game-grid">
-
-        <div id="your-board-label">Your Board</div>
         <!-- Boards for placing ships and attacking -->
         <div class="board self" id="p1self"></div>
         <div class="board self" id="p2self" style="display: none;"></div>
 
-
         <div class="middle-section">
-            <div class="player-turn-label" id="player-turn"><h3>Decide Number of Ships</h3></div>
-            <div class="player-info">
+            <div class="game-state-label" id="game-state"><h3>Battleship</h3></div>
+            <!-- Start Game Prompt -->
+            <div id="start-game-prompt">
+                <button id="start-game-button">Start Game</button>
+            </div>
+            <div id="controls" style="display: none;">
+                <label id="ship-length-label" for="ship-length">Choose Setting</label>
+                <select id="ship-length">
+                    <option value="1">1: 1x1</option>
+                    <option value="2">2: 1x1, 1x2</option>
+                    <option value="3">3: 1x1, 1x2, 1x3</option>
+                    <option value="4">4: 1x1, 1x2, 1x3, 1x4</option>
+                    <option value="5">5: 1x1, 1x2, 1x3, 1x4, 1x5</option>
+                </select>
+                <p id="ship-placement-status"></p>
+                <button id="shipConfirm">Confirm</button>
+                <br><br>
+                <label for="start-coord" id="start-coord-label" style="display: none">Starting Coordinate:</label>
+                <input type="text" id="start-coord" placeholder="A1" style="display: none">
+                <br><br>
+                <label for="direction" id="direction-label" style="display: none">Direction:</label>
+                <select id="direction" style="display: none">
+                    <option value="horizontal">Horizontal</option>
+                    <option value="vertical">Vertical</option>
+                </select>
+                <br><br>
+                <button id="place-ship" style="display: none;">Place Ship</button>
+                <button id="next-player-place-ship" style="display: none;" disabled>Player 1 End Placing Ships</button>
+                <button id="start-game" style="display: none;" disabled>Start Attack Phase</button>
+            </div>
+            <div id="scoreboard" style="display: none;">
                 <h3>Player 1</h3>
                 <p>Hits: <span id="p1-hits">0</span></p>
                 <p>Misses: <span id="p1-miss">0</span></p>
                 <p>Ships: <span id="p1-ships-left">0</span></p>
-            </div>
-            <div class="player-info">
                 <h3>Player 2</h3>
                 <p>Hits: <span id="p2-hits">0</span></p>
                 <p>Misses: <span id="p2-miss">0</span></p>
                 <p>Ships: <span id="p2-ships-left">0</span></p>
             </div>
             <button id="end-turn" style="display: none;">End Turn</button>
+            <div id="p1-winner-screen" style="display: none;">
+                <button id="play-again-button-1">Play Again</button>
+            </div>
+            <div id="p2-winner-screen" style="display: none;">
+                <button id="play-again-button-2">Play again</button>
+            </div>
         </div>
 
         <span id="text-alert" style="display: none;">alert text</span>
 
-        <div id="opponent-board-label">Opponent's Board</div>
-
         <div class="board op" id="p1opponent"></div>
         <div class="board op" id="p2opponent" style="display: none;"></div>
 
-        <div id="controls">
-            <h2>Place Your Ships</h2>
-            <label id="ship-length-label" for="ship-length">Number of Ships:</label>
-            <select id="ship-length">
-                <option value="1">1: 1x1</option>
-                <option value="2">2: 1x1, 1x2</option>
-                <option value="3">3: 1x1, 1x2, 1x3</option>
-                <option value="4">4: 1x1, 1x2, 1x3, 1x4</option>
-                <option value="5">5: 1x1, 1x2, 1x3, 1x4, 1x5</option>
-            </select>
-    
-            <p id="ship-placement-status"></p>
-    
-            <button id="shipConfirm">Confirm</button>
-            <br><br>
-    
-            <label for="start-coord" id="start-coord-label" style="display: none">Starting Coordinate (e.g., A1):</label>
-            <input type="text" id="start-coord" placeholder="A1" style="display: none">
-            <br><br>
-    
-            <label for="direction" id="direction-label" style="display: none">Direction:</label>
-            <select id="direction" style="display: none">
-                <option value="horizontal">Horizontal</option>
-                <option value="vertical">Vertical</option>
-            </select>
-            <br><br>
-    
-            <button id="place-ship" style="display: none;">Place Ship</button>
-            <button id="next-player-place-ship" style="display: none;" disabled>Player 1 End Placing Ships</button>
-            <button id="start-game" style="display: none;" disabled>Start Attack Phase</button>
+
+        <div id='pass-screen' style='display: none;'>
+            <h2></h2>
+            <button id='pass'>Pass</button>
         </div>
     </div>
-
-
     <!-- Ship Placement Controls -->
 
     <div id="win-modal" class="modal">

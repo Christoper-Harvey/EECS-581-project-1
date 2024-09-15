@@ -12,7 +12,7 @@ function nextTurn() {
         document.getElementById("p2self").style.display = "grid";
         document.getElementById("p2opponent").style.display = "grid";
 
-        document.getElementById("player-turn").innerText = "Player 2's Turn";
+        document.getElementById("game-state").innerText = "Player 2's Turn";
     } else {//change to p1's turn
         turn = 1;
         document.getElementById("p1self").style.display = "grid";
@@ -21,7 +21,7 @@ function nextTurn() {
         document.getElementById("p2self").style.display = "none";
         document.getElementById("p2opponent").style.display = "none";
 
-        document.getElementById("player-turn").innerText = "Player 1's Turn";
+        document.getElementById("game-state").innerText = "Player 1's Turn";
     }
 
     return turn

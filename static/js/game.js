@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let p1miss = 0;
     let p2hits = 0;
     let p2miss = 0;
+    let turn = 1;
 
     let numShips = 0;
     let shipsToPlace = [];
@@ -21,9 +22,28 @@ document.addEventListener("DOMContentLoaded", function () {
 	    document.getElementById("p2opponent"),
     ]
 
+    document.getElementById('pass').addEventListener('click', function() {
+        // Hide the pass screen when the button is clicked
+        document.getElementById('pass-screen').style.display = 'none';
+    });
+    
+    // Function to show the pass screen
+    function showPassScreen() {
+        document.getElementById("pass-screen").children[0].innerText = `Pass computer to Player ${turn}`;
+        document.getElementById('pass-screen').style.display = 'flex';
+    }
+    
+
+    document.getElementById('start-game-button').addEventListener('click', function() {
+        document.getElementById('start-game-prompt').style.display = 'none';
+        document.getElementById('start-game-button').style.display = 'none';
+        document.getElementById('controls').style.display = 'block';
+        document.getElementById("game-state").innerText = "Ship Count";
+    });
+
     document.getElementById("shipConfirm").addEventListener("click", function (){
 
-        document.getElementById("player-turn").innerText = "Player 1's Turn";
+        document.getElementById("game-state").innerText = "Player 1's Turn";
 
         numShips = parseInt(document.getElementById("ship-length").value);
 
@@ -65,10 +85,13 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("next-player-place-ship").addEventListener("click", function () {
         if (currentShipIndex >= shipsToPlace.length) {
             // Player 1 is done, switch to Player 2
+            turn = 2;
+            showPassScreen();
+
             p2PlaceShips = true;
             currentShipIndex = 0;  // Reset for Player 2
 
-            document.getElementById("player-turn").innerText = "Player 2's Turn";
+            document.getElementById("game-state").innerText = "Player 2's Turn";
 
             document.getElementById("p1self").style.display = "none";
             document.getElementById("p1opponent").style.display = "none";
@@ -90,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to start the attack phase
     document.getElementById("start-game").addEventListener("click", function () {
+        turn = 1;
+        showPassScreen();
         isAttackPhase = true;
         // nextTurn();
         document.getElementById("p1self").style.display = "grid";
@@ -99,12 +124,13 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("p2opponent").style.display = "none";
 
         document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
+        document.getElementById("scoreboard").style.display = "inline";
         document.getElementById("end-turn").style.display = "block"; // Show end turn button
         // alert("All ships placed! Attack phase begins.");
         document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
         document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
 
-        document.getElementById("player-turn").innerText = "Player 1's Turn";
+        document.getElementById("game-state").innerText = "Player 1's Turn";
     });
 
     // Event listener for swapping turns
@@ -114,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         turn = nextTurn(); // I added this here so we can use the turn to do functions. This can be removed if not needed.
+        showPassScreen();
         hasFired = false;
     });
 
