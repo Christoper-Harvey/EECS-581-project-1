@@ -21,6 +21,13 @@
     border-radius: 10px;
 }
 
+#text-alert {
+    grid-column: 2;
+    color: red;
+    font-size: 17px;
+    font-weight: bold;
+}
+
 .player-info {
     margin: 20px 0;
 }

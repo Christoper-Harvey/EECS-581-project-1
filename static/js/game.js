@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             statusElement.innerText = "All ships placed!";
             document.getElementById("next-player-place-ship").disabled = false;
+            document.getElementById("place-ship").disabled = true;
             if (p2PlaceShips){
                 document.getElementById("start-game").disabled = false;
             }
@@ -75,6 +76,8 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("p2self").style.display = "grid";
             document.getElementById("p2opponent").style.display = "grid";
 
+            document.getElementById("start-coord").value = "";
+            document.getElementById("place-ship").disabled = false;
 
             document.getElementById("next-player-place-ship").style.display = "none";
             // document.getElementById("start-game").disabled = true;  // Disable until Player 2 places all ships
@@ -87,32 +90,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to start the attack phase
     document.getElementById("start-game").addEventListener("click", function () {
-        if (p2.shipsLeft > 0) {
-            isAttackPhase = true;
-            // nextTurn();
-            document.getElementById("p1self").style.display = "grid";
-            document.getElementById("p1opponent").style.display = "grid";
+        isAttackPhase = true;
+        // nextTurn();
+        document.getElementById("p1self").style.display = "grid";
+        document.getElementById("p1opponent").style.display = "grid";
 
-            document.getElementById("p2self").style.display = "none";
-            document.getElementById("p2opponent").style.display = "none";
+        document.getElementById("p2self").style.display = "none";
+        document.getElementById("p2opponent").style.display = "none";
 
-            document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
-            document.getElementById("end-turn").style.display = "block"; // Show end turn button
-            // alert("All ships placed! Attack phase begins.");
-            document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
-            document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
+        document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
+        document.getElementById("end-turn").style.display = "block"; // Show end turn button
+        // alert("All ships placed! Attack phase begins.");
+        document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
+        document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
 
-            document.getElementById("player-turn").innerText = "Player 1's Turn";
-        }
-        else {
-            window.alert("You must place at least one ship.");
-        }
+        document.getElementById("player-turn").innerText = "Player 1's Turn";
     });
 
     // Event listener for swapping turns
     document.getElementById("end-turn").addEventListener("click", function () {
         if (!hasFired) {
-            window.alert("You haven't fired your shot yet!");
+            alert("You haven't fired your shot yet!");
             return;
         }
         turn = nextTurn(); // I added this here so we can use the turn to do functions. This can be removed if not needed.
@@ -287,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
             else if (isAttackPhase && event.target.classList.contains("cell") && hasFired) {
-                window.alert("You can only fire once per turn.");
+                alert("You can only fire once per turn.");
             }
         });
     });
@@ -301,7 +299,6 @@ document.addEventListener("DOMContentLoaded", function () {
             victoryCry.play();
             victoryTrumpet.play();
             setTimeout(() => {
-                // window.alert("PLAYER 1 WINS!");
                 showWinnerModal('Player 1')
             }, 100);
             setTimeout(() => {champions.play();}, 5000);
@@ -312,7 +309,6 @@ document.addEventListener("DOMContentLoaded", function () {
             victoryCry.play();
             victoryTrumpet.play();
             setTimeout(() => {
-                // window.alert("PLAYER 2 WINS!");
                 showWinnerModal('Player 2')
             }, 100);
             setTimeout(() => {champions.play();}, 5000);

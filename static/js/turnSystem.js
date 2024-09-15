@@ -13,7 +13,6 @@ function nextTurn() {
         document.getElementById("p2opponent").style.display = "grid";
 
         document.getElementById("player-turn").innerText = "Player 2's Turn";
-        // window.alert("Player 2: Your Turn\n" + p1.shipsLeft + " ships remaining");
     } else {//change to p1's turn
         turn = 1;
         document.getElementById("p1self").style.display = "grid";
@@ -23,8 +22,26 @@ function nextTurn() {
         document.getElementById("p2opponent").style.display = "none";
 
         document.getElementById("player-turn").innerText = "Player 1's Turn";
-        // window.alert("Player 1: Your Turn\n" + p2.shipsLeft + " ships remaining");
     }
 
     return turn
+}
+
+//text alert function
+function alert(message) {
+    //make message appear
+    document.getElementById("text-alert").textContent = message;
+    document.getElementById("text-alert").style.display = "inline";
+
+    //fadeout
+    setTimeout(() => {
+        document.getElementById("text-alert").style.transition = "all 3s";
+        document.getElementById("text-alert").style.opacity = "0";
+    }, 2000);
+
+    //reset
+    document.getElementById("text-alert").style.transition = "all 0s";
+    document.getElementById("text-alert").style.opacity = "1";
+
+
 }
