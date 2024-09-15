@@ -1,16 +1,115 @@
 
-.board-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+/* Game grid layout */
+.game-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.15fr 1fr;  /* Self board, stats, opponent board */
+    grid-template-rows: 1fr; /* One row */
+    grid-gap: 0px;
+    justify-items: center;
+    align-items: center;
 }
+
+/* Middle section for player stats */
+.middle-section {
+    grid-column: 2; /* Middle column */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.player-info {
+    margin: 20px 0;
+}
+
+.player-info h3 {
+    margin-bottom: 10px;
+}
+
+.middle-section p {
+    margin: 5px 0;
+}
+
+/* Board styles */
 .board {
     display: grid;
-    grid-template-columns: 30px repeat(10, 50px); /* 10x10 grid, plus labels */
+    grid-template-columns: 30px repeat(10, 50px); /* 10x10 grid plus row/col labels */
     grid-template-rows: 30px repeat(10, 50px);
     gap: 5px;
 }
+
+.self {
+    grid-column: 1; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+}
+
+.op {
+    grid-column: 3; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+}
+
+/* Controls placed in column 3 and row 1 */
+#controls {
+    grid-column: 3; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+    width: 250px;
+    padding: 20px;
+    background-color: #f0f0f0;  /* Light gray background */
+    border-radius: 15px;  /* Rounded edges */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  /* Add subtle shadow */
+    text-align: center;
+    z-index: 10; 
+    margin-top: 20px;
+}
+
+/* Styling for the form elements inside the controls */
+#controls select, #controls button {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Style for Player turn label */
+.player-turn-label {
+    position: relative;
+    font-size: 28px;
+    font-weight: bold;
+    text-wrap: nowrap;
+    color: red;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    z-index: 20;
+}
+
+/* Style for Your Board label */
+#your-board-label {
+    grid-column: 1; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+    font-size: 24px;
+    font-weight: bold;
+    color: red; 
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 20; /* Ensure it's on top of the board */
+    position: relative;
+    top: -330px; /* Shift the label upwards */
+}
+
+/* Style for Opponent's Board label */
+#opponent-board-label {
+    grid-column: 3; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+    font-size: 24px;
+    font-weight: bold;
+    color: red; 
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 20; /* Ensure it's on top of the board */
+    position: relative;
+    top: -330px; /* Shift the label upwards */
+}
+
+
 .cell {
     width: 50px;
     height: 50px;
@@ -19,6 +118,7 @@
     line-height: 50px;
     cursor: pointer;
     border: 1px solid black;
+    position: relative;
 }
 .label {
     text-align: center;
@@ -30,9 +130,40 @@
 .miss {
     background-color: black;
 }
+
+/* Add red dot for hit */
+.hit-self::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center the dot */
+    z-index: 10;  /* Ensure the dot is above the background */
+}
+
+/* Add black dot for miss */
+.miss-self::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center the dot */
+    z-index: 10;  /* Ensure the dot is above the background */
+}
+
 .placed {
     background-color: gray;
+    position: relative;
 }
+
 .row-label, .col-label {
     background-color: lightgray;
     line-height: 30px;
@@ -112,16 +243,23 @@ body {
     font-size: 16px;
 }
 
+#end-turn{
+    background-color: black;
+    color: white;
+}
+
 #play-again-button:hover {
     background-color: #218838;
+    color: white;
 }
 
 #fireworksCanvas {
     display: none; /* Hide the canvas initially */
     position: fixed;
+    background-color: black;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    /* z-index: 9999; */
+    z-index: 9999;
 }

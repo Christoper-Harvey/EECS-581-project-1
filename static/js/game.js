@@ -21,27 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	    document.getElementById("p2opponent"),
     ]
 
-    // Preload audio files
-    const canonFire = new Audio('/static/sfx/canonFire.wav');
-    const endGame = new Audio('/static/sfx/finalExplosionGameEnd.wav');
-    const victoryCry = new Audio('/static/sfx/victoryCry.wav');
-    const victoryTrumpet = new Audio('/static/sfx/victoryTrumpet.wav');
-
-    const champions = new Audio('/static/sfx/champions.wav');
-
-    // Preload miss sounds
-    const hitSounds = [
-        new Audio('/static/sfx/hitLarge.wav'),
-        new Audio('/static/sfx/hitSmall.wav')
-    ];
-
-    // Preload miss sounds
-    const missSounds = [
-        new Audio('/static/sfx/miss1.wav'),
-        new Audio('/static/sfx/miss2.wav')
-    ];
-
     document.getElementById("shipConfirm").addEventListener("click", function (){
+
+        document.getElementById("player-turn").innerText = "Player 1's Turn";
 
         numShips = parseInt(document.getElementById("ship-length").value);
 
@@ -85,8 +67,15 @@ document.addEventListener("DOMContentLoaded", function () {
             p2PlaceShips = true;
             currentShipIndex = 0;  // Reset for Player 2
 
-            document.getElementById("p1-wrapper").style.display = "none";
-            document.getElementById("p2-wrapper").style.display = "flex";
+            document.getElementById("player-turn").innerText = "Player 2's Turn";
+
+            document.getElementById("p1self").style.display = "none";
+            document.getElementById("p1opponent").style.display = "none";
+
+            document.getElementById("p2self").style.display = "grid";
+            document.getElementById("p2opponent").style.display = "grid";
+
+
             document.getElementById("next-player-place-ship").style.display = "none";
             // document.getElementById("start-game").disabled = true;  // Disable until Player 2 places all ships
             document.getElementById("start-game").style.display = "inline";
@@ -101,12 +90,19 @@ document.addEventListener("DOMContentLoaded", function () {
         if (p2.shipsLeft > 0) {
             isAttackPhase = true;
             // nextTurn();
-            document.getElementById("p2-wrapper").style.display = "none";
-            document.getElementById("p1-wrapper").style.display = "flex";
+            document.getElementById("p1self").style.display = "grid";
+            document.getElementById("p1opponent").style.display = "grid";
+
+            document.getElementById("p2self").style.display = "none";
+            document.getElementById("p2opponent").style.display = "none";
 
             document.getElementById("controls").style.display = "none"; // Hide controls after ship placement
             document.getElementById("end-turn").style.display = "block"; // Show end turn button
             // alert("All ships placed! Attack phase begins.");
+            document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
+            document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
+
+            document.getElementById("player-turn").innerText = "Player 1's Turn";
         }
         else {
             window.alert("You must place at least one ship.");
@@ -122,51 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
         turn = nextTurn(); // I added this here so we can use the turn to do functions. This can be removed if not needed.
         hasFired = false;
     });
-
-    //checks if a player has won and executes end game
-    function checkWin() {
-        if (p2.shipsLeft == 0) {
-            //p1 wins
-            startFireworks();
-            endGame.play();
-            victoryCry.play();
-            victoryTrumpet.play();
-            setTimeout(() => {
-                // window.alert("PLAYER 1 WINS!");
-                showWinnerModal('Player 1')
-            }, 100);
-            setTimeout(() => {champions.play();}, 5000);
-        } else if (p1.shipsLeft == 0) {
-            //p2 wins
-            startFireworks();
-            endGame.play();
-            victoryCry.play();
-            victoryTrumpet.play();
-            setTimeout(() => {
-                // window.alert("PLAYER 2 WINS!");
-                showWinnerModal('Player 2')
-            }, 100);
-            setTimeout(() => {champions.play();}, 5000);
-        }
-    }
-
-    function showWinnerModal(winner) {
-        const modal = document.getElementById("win-modal");
-        const winnerMessage = document.getElementById("winner-message");
-        winnerMessage.innerText = `${winner} WINS!`;
-        modal.style.display = "flex";  // Show the modal
-    }
-
-    document.getElementById("play-again-button").addEventListener("click", function () {
-        location.reload();  // Refresh the page to start over
-    });
-
-
-    // // Function to stop fireworks
-    // function stopFireworks() {
-    //     document.getElementById("fireworksCanvas").style.display = "none";
-    // }
-
 
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
@@ -274,12 +225,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                 canonFire.play();
                                 setTimeout(() => {
                                     event.target.classList.add("hit");
+                                    document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("hit-self");
                                     playRandomHitSound();
                                     playHitAnimation(event.target);
                                     p2.shipsLeft--;
                                     checkWin();
                                     p1hits++;
                                     document.getElementById('p1-hits').innerText = p1hits;
+                                    document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
                                 }, 1500);
                             }
                         } else {
@@ -289,6 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 canonFire.play();
                                 setTimeout(() => {
                                     event.target.classList.add("miss");
+                                    document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("miss-self");
                                     playRandomMissSound();
                                     playMissAnimation(event.target);
                                     p1miss++;
@@ -305,12 +259,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             canonFire.play();
                             setTimeout(() => {
                                 event.target.classList.add("hit");
+                                document.getElementById('p1self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("hit-self");
                                 playRandomHitSound();
                                 playHitAnimation(event.target);
                                 p1.shipsLeft--;
                                 checkWin();
                                 p2hits++;
                                 document.getElementById('p2-hits').innerText = p2hits;
+                                document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
                             }, 1500);
                         }
                     } else {
@@ -320,6 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             canonFire.play();
                             setTimeout(() => {
                                 event.target.classList.add("miss");
+                                document.getElementById('p1self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("miss-self");
                                 playRandomMissSound();
                                 playMissAnimation(event.target);
                                 p2miss++;
@@ -334,50 +291,42 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-    
-    // Function to randomly select and play one of the miss sounds
-    function playRandomMissSound() {
-        const randomIndex = Math.floor(Math.random() * missSounds.length);
-        missSounds[randomIndex].play();
-    }
 
-    // Function to randomly select and play one of the hit sounds
-    function playRandomHitSound() {
-        const randomIndex = Math.floor(Math.random() * hitSounds.length);
-        hitSounds[randomIndex].play();
-    }
-
-    // Play hit animation using a GIF file
-    function playHitAnimation(cell) {
-        // Remove any existing hit animation
-        const existingHit = cell.querySelector(".hit-animation");
-        if (existingHit) {
-            existingHit.remove();
+    //checks if a player has won and executes end game
+    function checkWin() {
+        if (p2.shipsLeft == 0) {
+            //p1 wins
+            startFireworks();
+            endGame.play();
+            victoryCry.play();
+            victoryTrumpet.play();
+            setTimeout(() => {
+                // window.alert("PLAYER 1 WINS!");
+                showWinnerModal('Player 1')
+            }, 100);
+            setTimeout(() => {champions.play();}, 5000);
+        } else if (p1.shipsLeft == 0) {
+            //p2 wins
+            startFireworks();
+            endGame.play();
+            victoryCry.play();
+            victoryTrumpet.play();
+            setTimeout(() => {
+                // window.alert("PLAYER 2 WINS!");
+                showWinnerModal('Player 2')
+            }, 100);
+            setTimeout(() => {champions.play();}, 5000);
         }
-        const img = document.createElement("img");
-        img.src = '/static/animations/explosion.gif';
-        img.classList.add("hit-animation");  // Add a class for reference
-        img.style.width = "50px";  // Match cell size
-        img.style.height = "50px";
-        cell.appendChild(img);
-
-        // Optionally, remove the GIF after a delay (GIFs loop automatically)
-        setTimeout(() => {
-            img.remove();
-        }, 1800);  // 1.8 second delay to remove the GIF
     }
 
-    // Play miss animation using a GIF file
-    function playMissAnimation(cell) {
-        const img = document.createElement("img");
-        img.src = '/static/animations/miss.gif';
-        img.style.width = "50px";  // Match cell size
-        img.style.height = "50px";
-        cell.appendChild(img);
-
-        // Optionally, remove the GIF after a delay (GIFs loop automatically)
-        setTimeout(() => {
-            img.remove();
-        }, 1100);  // 1.1 second delay to remove the GIF
+    function showWinnerModal(winner) {
+        const modal = document.getElementById("win-modal");
+        const winnerMessage = document.getElementById("winner-message");
+        winnerMessage.innerText = `${winner} WINS!`;
+        modal.style.display = "flex";  // Show the modal
     }
+
+    document.getElementById("play-again-button").addEventListener("click", function () {
+        location.reload();  // Refresh the page to start over
+    });
 });
