@@ -1,4 +1,10 @@
+//Name: Chris Harvey, Kenny Meade
+//Date: 9/9/2024
+//Purpose: Handles the game events and methods that the players can take
+
+// Inializes the game states, defines site methods, and other game flow methods like turns
 document.addEventListener("DOMContentLoaded", function () {
+    //Inital game states
     const colLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     const rowLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
@@ -17,11 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let shipsToPlace = [];
     let currentShipIndex = 0;
 
+    //Gets player boards
     const boards = [
         document.getElementById("p1opponent"),
 	    document.getElementById("p2opponent"),
     ]
 
+    //Defines the listener to switch turns
     document.getElementById('pass').addEventListener('click', function() {
         // Hide the pass screen when the button is clicked
         document.getElementById('pass-screen').style.display = 'none';
@@ -33,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('pass-screen').style.display = 'flex';
     }
     
-
+    //Defines listener to start the game
     document.getElementById('start-game-button').addEventListener('click', function() {
         document.getElementById('start-game-prompt').style.display = 'none';
         document.getElementById('start-game-button').style.display = 'none';
@@ -41,12 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("game-state").innerText = "Ship Count";
     });
 
+    //Defines the listener to confirm the ship placement
     document.getElementById("shipConfirm").addEventListener("click", function (){
-
+        //Notifies player1 to initate their turn
         document.getElementById("game-state").innerText = "Player 1's Turn";
 
         numShips = parseInt(document.getElementById("ship-length").value);
-
+        //Displays the prompts for the ship confirmation
         document.getElementById("shipConfirm").style.display = "none";
         document.getElementById("ship-length").style.display = "none";
         document.getElementById("ship-length-label").style.display = "none";
@@ -59,22 +68,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("place-ship").style.display = "inline";
         document.getElementById("next-player-place-ship").style.display = "inline";
-
+        //Places the ships by the length of the ship
         for (let i = 1; i <= numShips; i++) {
             shipsToPlace.push(i);  // Ships will be placed from size 1x1 up to 1xN
         }
+        //Updates game state
         updateShipPlacementStatus();
     });
 
     // Function to update ship placement status
     function updateShipPlacementStatus() {
+        //Whether all of the ships are places, the site either prompts the player, places player2 ships or starts the game
         const statusElement = document.getElementById("ship-placement-status");
+        //Prompts player to place more ships
         if (currentShipIndex < shipsToPlace.length) {
             statusElement.innerText = `Place ship of size ${shipsToPlace[currentShipIndex]}`;
         } else {
+            //Confirms ship placement
             statusElement.innerText = "All ships placed!";
             document.getElementById("next-player-place-ship").disabled = false;
             document.getElementById("place-ship").disabled = true;
+            //Checks if player2 ship's are ready to start the game
             if (p2PlaceShips){
                 document.getElementById("start-game").disabled = false;
             }
@@ -90,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             p2PlaceShips = true;
             currentShipIndex = 0;  // Reset for Player 2
-
+            //Changes player turn and boards
             document.getElementById("game-state").innerText = "Player 2's Turn";
 
             document.getElementById("p1self").style.display = "none";
@@ -113,10 +127,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to start the attack phase
     document.getElementById("start-game").addEventListener("click", function () {
+        //Inital game states and show boards
         turn = 1;
         showPassScreen();
         isAttackPhase = true;
         // nextTurn();
+        //Defines the game state within the board space for player to see
         document.getElementById("p1self").style.display = "grid";
         document.getElementById("p1opponent").style.display = "grid";
 
@@ -135,10 +151,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener for swapping turns
     document.getElementById("end-turn").addEventListener("click", function () {
+        //Checks if player has selected a position to fire at
         if (!hasFired) {
             alert("You haven't fired your shot yet!");
             return;
         }
+        //Changes turns and resets interal state for next player
         turn = nextTurn(); // I added this here so we can use the turn to do functions. This can be removed if not needed.
         showPassScreen();
         hasFired = false;
@@ -146,13 +164,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener for placing ships
     document.getElementById("place-ship").addEventListener("click", function () {
+        //Gets information for the ships placement
         const shipLength = shipsToPlace[currentShipIndex];
         const startCoord = document.getElementById("start-coord").value.toUpperCase();
         const direction = document.getElementById("direction").value;
-
+        //Inital ship position
         const startCol = colLabels.indexOf(startCoord[0]);
         const startRow = parseInt(startCoord.slice(1)) - 1;
-
+        //Guards against out of bounds ships
         if (startCol === -1 || startRow === -1) {
             alert("Invalid coordinate.");
             return;
@@ -177,9 +196,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check if a ship can be placed on the board
     function canPlaceShip(row, col, length, direction) {
+        //Places ships horizontally if there is a valid placement
         if (direction === "horizontal") {
+            //Catches out of bounds
             if (col + length > 10) return false;
             for (let i = 0; i < length; i++) {
+                //checks if there are any conflicting ships
                 if (p2PlaceShips){
                     if (p2.ships.some(ship => ship.row === row && ship.col === col + i)) {
                         return false; // A ship is already here
@@ -190,9 +212,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             }
+        //Places ships vertically if there is a valid placement
         } else if (direction === "vertical") {
             if (row + length > 10) return false;
             for (let i = 0; i < length; i++) {
+                //checks if ther are any conflicting ships
                 if (p2PlaceShips){
                     if (p2.ships.some(ship => ship.row === row + i && ship.col === col)) {
                         return false; // A ship is already here
@@ -276,7 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     p2.shipsLeft--;
                                     checkWin();
                                 }
-    
+                                //iterates player 1 hits
                                 p1hits++;
                                 document.getElementById('p1-hits').innerText = p1hits;
                                 document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
@@ -292,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("miss-self");
                                 playRandomMissSound();
                                 playMissAnimation(event.target);
-                                p1miss++;
+                                p1miss++;//interates player 1 miss
                                 document.getElementById('p1-miss').innerText = p1miss;
                             }, 1500);
                         }
@@ -327,7 +351,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     p1.shipsLeft--;
                                     checkWin();
                                 }
-    
+                                //Iterates player 2 hits
                                 p2hits++;
                                 document.getElementById('p2-hits').innerText = p2hits;
                                 document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
@@ -381,7 +405,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {champions.play();}, 5000);
         }
     }
-
+    //Winner screen
     function showWinnerModal(winner) {
         const modal = document.getElementById("win-modal");
         const winnerMessage = document.getElementById("winner-message");
