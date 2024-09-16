@@ -3,7 +3,7 @@ import json
 class Player():
     # Subclass for each ship a player has
     class Ship():
-        def __inti__(self, type, pos=["A1"]):
+        def __init__(self, type):
             # Types: Aircraft (A), Battleship (B), Crusier (C), Submarine (S), Destroyer (D)
             self.type = type
             # Identifies the type of ship and assigns the correct name and hit point value
@@ -23,8 +23,8 @@ class Player():
                 case 'D':
                     self.name = 'Destroyer'
                     self.hp = 2
-            # The position will be held in a list of tuples i.e. [(x1,y1),(x2,y2)]
-            self.pos = pos
+            # The position will be held in a list i.e. ['A1', 'A2']
+            self.pos = []
 
         # Deincriments hit points of given ship and returns if the user sunk the ship
         def hit(self):
@@ -41,25 +41,16 @@ class Player():
     # Player instance
     def __init__(self, id):
         self.id = id
-        self.ships = self.createShips()
+        self.ships = [self.Ship('A'), self.Ship('B'), self.Ship('C'), self.Ship('S'), self.Ship('D')]
         self.hits = []
         self.misses = []
-
-    # Creates the 5 battleships
-    def createShips(self):
-        a = self.Ship('A')
-        b = self.Ship('B')
-        c = self.Ship('C')
-        s = self.Ship('S')
-        d = self.Ship('D')
-        return [a,b,c,s,d]
 
     # Checks status of players ships
     def status(self):
         if len(self.ships) == 0:
-            return "You lost."
+            return f"{self.id} lost."
         
-        status = f"You have {len(self.ships)} left:\n"
+        status = f"{self.id} has {len(self.ships)} left:\n"
         for ship in self.ships:
             status += f"{ship.name}\n"
         return status
@@ -80,21 +71,16 @@ class Player():
         if hit == 0:
             self.ships.pop(i)
         # Returns prompt whether the user sunk the ship
-        return hit, ship
+        return hit
 
     # Attacks other players ships, records the hit/miss and returns result of attacks   
     def attack(self, otherPlayer, cord):
-        hit, ship = otherPlayer.check_pos(cord)
-        match hit:
-            case -1:
-                self.misses.append(cord)
-                return "Miss."
-            case 0:
-                self.hits.append(cord)
-                return f"Sunk {ship.name}."
-            case 1:
-                self.hits.append(cord)
-                return f"Hit {ship.name}."
+        hit = otherPlayer.check_pos(cord)
+        # Records whether attack was a hit or miss
+        if hit >= 0:    
+            self.hits.append(cord)
+        else:
+           self.misses.append(cord)
 
     # Makes JSON representation of the players game state with ID and ship hit points     
     def make_state(self):
@@ -132,6 +118,7 @@ class Player():
         state = json.dumps(state)
         return state
     
+    # Sets the positions of each of the ships after their positions are confirmed by user
     def set_positions(self, state):
         # Catches state updates for opposite players
         if self.id != state['ID']:
@@ -150,21 +137,3 @@ class Player():
                     ship.set_pos(state["Submarine"])
                 case 'D': # Destroyer
                     ship.set_pos(state["Destroyer"])
-
-def main():
-    player1 = Player('Ian')
-    player2 = Player('Faith')
-
-    player1.status()
-    player2.status()
-
-    state = '{"ID":"Ian", "Aircraft":4,"Battleship":4,"Crusier":2,"Submarine":0,"Destroyer":2,"Hits":["D3","D5","D4"],"Misses":["A1"]}'
-
-    state = json.loads(state)
-
-    player1.update_state(state)
-
-    player1.status() 
-
-if __name__ == "__main__":
-    main()
