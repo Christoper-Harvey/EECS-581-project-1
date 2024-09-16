@@ -12,10 +12,11 @@
 
 /* center the body */
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Andale Mono', AndaleMono, monospace;
     text-align: center;
+    background-color:rgb(10, 10, 10);
+    color:lime;
 }
-
 #pass-screen {
     display: none; /* Hidden initially */
     position: fixed;
@@ -23,55 +24,34 @@ body {
     left: 0;
     width: 100vw; /* Full viewport width */
     height: 100vh; /* Full viewport height */
-    background-color: rgb(0, 0, 0); /* Semi-transparent background */
-    color: white;
-    z-index: 10000; /* High z-index to ensure it's on top of everything */
+    background-color: black;
+    color: lime;
+    z-index: 10000;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
 }
-
-#pass-screen h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-}
-
-#pass-screen button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #ff6347; /* Button color */
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-#pass-screen button:hover {
-    background-color: #e55342; /* Slightly darker hover effect */
-}
-
-
 /* Game grid layout */
 .game-grid {
     display: grid;
-    grid-template-columns: 1fr 0.15fr 1fr;  /* Self board, stats, opponent board */
-    grid-template-rows: 1fr; /* One row */
+    grid-template-columns: 1fr 0.15fr 1fr;
+    grid-template-rows: 1fr;
     grid-gap: 0px;
     justify-items: center;
     align-items: center;
 }
 /* Middle section */
 .middle-section {
-    grid-column: 2; /* Middle column */
+    grid-column: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 94%;
+    height: 92vh;
     width: 200px;
-    background-color: #f0f0f0;
+    background-color: rgb(10, 10, 10);
     padding: 20px;
     border-radius: 10px;
 }
@@ -81,18 +61,16 @@ body {
     font-size: 24px;
     font-weight: bold;
     text-wrap: nowrap;
-    color: red;
+    color: lime;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
     z-index: 20;
 }
-#scoreboard {
-    margin: 20px 0;
-}
-
+/* Text Alert Popup */
 #text-alert {
+    margin-top:20px;
     grid-column: 2;
-    color: red;
+    color: lime;
     font-size: 17px;
     font-weight: bold;
 }
@@ -146,9 +124,6 @@ body {
     background-color: #ff6347; /* Lighter red for labels */
     color: white;
 }
-#p1opponent .cell:hover {
-    background-color: rgba(240, 128, 128, 0.5) !important; /* A subtle hover effect */
-}
 /* Style for Player 2's opponent board (blue theme) */
 #p2opponent .cell {
     background-color: lightblue;
@@ -156,9 +131,6 @@ body {
 #p2opponent .row-label, #p2opponent .col-label {
     background-color: #87ceeb; /* Lighter blue for labels */
     color: white;
-}
-#p2opponent .cell:hover {
-    background-color: rgba(173, 216, 230, 0.5) !important; /* A subtle hover effect */
 }
 /* Red/blue dot for hits and misses */
 .hit-self::before {

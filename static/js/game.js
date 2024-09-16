@@ -1,25 +1,31 @@
-//Name: Chris Harvey, Kenny Meade
-//Date: 9/9/2024
-//Purpose: Handles the game events and methods that the players can take
+/*
+ * NAME: Battleship - EECS581 Project 1 - game.js
+ * DESCRIPTION: This program runs the entire game.
+ * INPUT: None
+ * OUTPUT: None (kinda, it makes everything else work)
+ * SOURCES: None
+ * AUTHORS: Chris Harvey, Ian Collins, Ryan Strong, Kenny Meade, Henry Chaffin
+ * DATE: 9/10/24
+ */
 
 // Inializes the game states, defines site methods, and other game flow methods like turns
 document.addEventListener("DOMContentLoaded", function () {
     //Inital game states
-    const colLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    const colLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']; // board rows and columns to call when placing ships.
     const rowLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
     var hasFired = false;   //tracker to allow payer to fire only once per turn
 
-    let isAttackPhase = false;
-    let p2PlaceShips = false;
+    let isAttackPhase = false; //tracker to check if ships are placed.
+    let p2PlaceShips = false; //tracker to check if player 1 has finished placing their ships.
 
-    let p1hits = 0;
+    let p1hits = 0; // init score board values and player's turn value
     let p1miss = 0;
     let p2hits = 0;
     let p2miss = 0;
     let turn = 1;
 
-    let numShips = 0;
+    let numShips = 0; // init number of ships and ships array.
     let shipsToPlace = [];
     let currentShipIndex = 0;
 
