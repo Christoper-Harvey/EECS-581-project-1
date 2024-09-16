@@ -1,5 +1,5 @@
 /**
- * NAME: Battleship - EECS581 Project 1 - stf.js
+ * NAME: Battleship - EECS581 Project 1 - sfx.js
  * DESCRIPTION: This program imports and controls the sound effects for battleship game
  * INPUT: files needed for audio
  * OUTPUT: audio into game
@@ -39,7 +39,7 @@ function playRandomHitSound() {
     hitSounds[randomIndex].play();
 }
 
-// Function to randomly select and play one of the hit sounds
+// Function to play ship sinking sound
 function playSunkSound() {
     endGame.play();
 }
