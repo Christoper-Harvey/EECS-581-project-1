@@ -131,3 +131,18 @@ class Player():
         # Convert to JSON
         state = json.dumps(state)
         return state
+    
+    def update_state(self, state):
+        # Updates each ship's hp
+        for ship in self.ships:
+            match ship.type:
+                case 'A': # Aircraft carrier
+                    self.ships[0].hp = state["Aircraft"]
+                case 'B': # Battleship
+                    self.ships[1].hp = state["Battleship"]
+                case 'C': # Crusier
+                    self.ships[2].hp = state["Crusier"]
+                case 'S': # Submarine
+                    self.ships[3].hp = state ["Submarine"]
+                case 'D': # Destroyer
+                    self.ships[4].hp = state["Destroyer"]
