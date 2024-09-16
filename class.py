@@ -1,5 +1,11 @@
+# Name: Ian Collins
+# Date: 9/13/2024
+# Course: EECS 581
+# Purpose: Creates class framework to keep track of the players boats and interact with other players by attacking
+
 import json
 
+# Defines the player class and methods
 class Player():
     # Subclass for each ship a player has
     class Ship():
@@ -34,7 +40,8 @@ class Player():
                 return 1 # Hit
             else:
                 return 0 # Sunk
-            
+        
+        # Sets the coordinates of each ship
         def set_pos(self, cords):
             self.pos = cords
      
@@ -47,13 +54,15 @@ class Player():
 
     # Checks status of players ships
     def status(self):
+        # Returns loss condition string
         if len(self.ships) == 0:
             return f"{self.id} lost."
         
+        # Creates string of the number of remaining ships and their names
         status = f"{self.id} has {len(self.ships)} left:\n"
         for ship in self.ships:
             status += f"{ship.name}\n"
-        return status
+        return status # Returns status as string
     
     # Checks the coordinates of launch removing the available point and calls hit or returns miss prompt
     def check_pos(self, cord="A1"):
@@ -82,7 +91,7 @@ class Player():
         else:
            self.misses.append(cord)
 
-    # Makes JSON representation of the players game state with ID and ship hit points     
+    # Returns JSON representation of the players game state with ID and ship hit points     
     def make_state(self):
         # Sets null state to each of the ship variables if not in self.ships list
         a = 0
@@ -137,3 +146,5 @@ class Player():
                     ship.set_pos(state["Submarine"])
                 case 'D': # Destroyer
                     ship.set_pos(state["Destroyer"])
+
+    
