@@ -1,3 +1,12 @@
+/**
+ * NAME: Battleship - EECS581 Project 1 - stf.js
+ * DESCRIPTION: This program imports and controls the sound effects for battleship game
+ * INPUT: files needed for audio
+ * OUTPUT: audio into game
+ * SOURCES: 
+ * AUTHORS: Chris Harvey
+ * DATE: 9/11/24
+ */
 // Preload audio files
 const canonFire = new Audio('/static/sfx/canonFire.wav');
 const endGame = new Audio('/static/sfx/finalExplosionGameEnd.wav');
