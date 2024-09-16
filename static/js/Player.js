@@ -1,3 +1,12 @@
+/**
+ * NAME: Battleship - EECS581 Project 1 - player.js
+ * DESCRIPTION: This is a class file for Ships and Players
+ * INPUT: input for constructors - player id and ship length and coordinates
+ * OUTPUT: none
+ * SOURCES: None
+ * AUTHORS: Chris Harvey
+ * DATE: 9/15/24
+ */
 class Ship {
     constructor(length, coordinates) {
         this.length = length;
