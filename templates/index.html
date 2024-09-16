@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!-- 
+    Battleship Game
+    This file handles many of the UI elements for the battleship game inluding the boards,
+    scoreboard, and all of the controls.
+    Inputs: /static/js/player.js /static/js/game.js /static/js/board.js /static/js/turnSystem.js
+    /static/js/fireworks.js /static/js/animations.js /static/js/sfx.js
+    Outputs: Controls, scoreboard, alerts, game status, pass screen, game board
+    Authors: Henry Chaffin, Kenny Meade, Chris Harvey
+    09/09/2024
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship Game</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="game-grid">
+        <!-- Boards for placing ships and attacking -->
+        <div class="board self" id="p1self"></div>
+        <div class="board self" id="p2self" style="display: none;"></div>
+
+        <div class="middle-section">
+            <div class="game-state-label" id="game-state"><h3>Battleship</h3></div>
+            <!-- Start Game Prompt -->
+            <div id="start-game-prompt">
+                <button id="start-game-button">Start Game</button>
+            </div>
+	    <!-- Game controls for ship placement-->
+            <div id="controls" style="display: none;">
+		<!-- Ship size selection-->
+                <label id="ship-length-label" for="ship-length">Choose Setting</label>
+                <select id="ship-length">
+                    <option value="1">1: 1x1</option>
+                    <option value="2">2: 1x1, 1x2</option>
+                    <option value="3">3: 1x1, 1x2, 1x3</option>
+                    <option value="4">4: 1x1, 1x2, 1x3, 1x4</option>
+                    <option value="5">5: 1x1, 1x2, 1x3, 1x4, 1x5</option>
+                </select>
+                <p id="ship-placement-status"></p>
+                <button id="shipConfirm">Confirm</button>
+                <br><br>
+		<!-- Controls for coordinate and direction -->
+                <label for="start-coord" id="start-coord-label" style="display: none">Starting Coordinate:</label>
+                <input type="text" id="start-coord" placeholder="A1" style="display: none">
+                <br><br>
+                <label for="direction" id="direction-label" style="display: none">Direction:</label>
+                <select id="direction" style="display: none">
+                    <option value="horizontal">Horizontal</option>
+                    <option value="vertical">Vertical</option>
+                </select>
+		<!-- Buttons for placing ships, switching players, and starting the attack phase -->
+                <br><br>
+                <button id="place-ship" style="display: none;">Place Ship</button>
+                <button id="next-player-place-ship" style="display: none;" disabled>Player 1 End Placing Ships</button>
+                <button id="start-game" style="display: none;" disabled>Start Attack Phase</button>
+            </div>
+	    <!-- Scoreboard to show hits/misses and remaining ships -->
+            <div id="scoreboard" style="display: none;">
+                <h3>Player 1</h3>
+                <p>Hits: <span id="p1-hits">0</span></p>
+                <p>Misses: <span id="p1-miss">0</span></p>
+                <p>Ships: <span id="p1-ships-left">0</span></p>
+                <h3>Player 2</h3>
+                <p>Hits: <span id="p2-hits">0</span></p>
+                <p>Misses: <span id="p2-miss">0</span></p>
+                <p>Ships: <span id="p2-ships-left">0</span></p>
+            </div>
+	    <!-- End turn button -->
+            <button id="end-turn" style="display: none;">End Turn</button>
+            <span id="text-alert" style="display: none;">alert text</span>
+	    <!-- Winner screen for each player -->
+            <div id="p1-winner-screen" style="display: none;">
+                <button id="play-again-button-1">Play Again</button>
+            </div>
+            <div id="p2-winner-screen" style="display: none;">
+                <button id="play-again-button-2">Play again</button>
+            </div>
+        </div>
+
+	<!-- Text alert placeholder -->
+        <span id="text-alert" style="display: none;">alert text</span>
+
+	<!-- Opponent boards for each player-->
+        <div class="board op" id="p1opponent"></div>
+        <div class="board op" id="p2opponent" style="display: none;"></div>
+	
+	<!-- Pass screen -->
+        <div id='pass-screen' style='display: none;'>
+            <h2></h2>
+            <button id='pass'>Pass</button>
+        </div>
+    </div>
+     <!-- Game-over screen -->
+    <div id="win-modal" class="modal">
+        <div class="modal-content">
+            <span id="winner-message"></span>
+            <button id="play-again-button">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Fireworks canvas -->
+    <canvas id="fireworksCanvas"></canvas>
+    
+    <!-- External JS files -->
+    <script src="/static/js/player.js"></script>
+    <script src="/static/js/game.js"></script>
+    <script src="/static/js/board.js"></script>
+    <script src="/static/js/turnSystem.js"></script>
+    <script src="/static/js/fireworks.js"></script>
+    <script src="/static/js/animations.js"></script>
+    <script src="/static/js/sfx.js"></script>
+</body>
+</html>

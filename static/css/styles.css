@@ -1,0 +1,216 @@
+/*
+    Battleship Game CSS Stylesheet
+    This file contains the styling for the battleship games UI components
+    including the game boards, pass screen, and scoreboard.
+    It also includes styles for the game modal, hit/miss indicators, and the fireworks display.
+    Inputs: None
+    Outputs: Game grid layout, pass screen styles, hit/miss indicators, 
+    player boards, modal styles, fireworks display
+    Authors: Henry Chaffin, Kenny Meade, Chris Harvey
+    09/09/2024
+*/
+
+/* center the body */
+body {
+    font-family: 'Andale Mono', AndaleMono, monospace;
+    text-align: center;
+    background-color:black;
+    color:lime;
+}
+#pass-screen {
+    display: none; /* Hidden initially */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    background-color: black;
+    color: lime;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+/* Game grid layout */
+.game-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.15fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 0px;
+    justify-items: center;
+    align-items: center;
+}
+/* Middle section */
+.middle-section {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 92vh;
+    width: 200px;
+    background-color: black;
+    padding: 20px;
+    border-radius: 10px;
+}
+/* Label for game state */
+.game-state-label {
+    position: relative;
+    font-size: 24px;
+    font-weight: bold;
+    text-wrap: nowrap;
+    color: lime;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    z-index: 20;
+}
+/* Text Alert Popup */
+#text-alert {
+    margin-top:20px;
+    grid-column: 2;
+    color: lime;
+    font-size: 17px;
+    font-weight: bold;
+}
+/* Board styles */
+.board {
+    display: grid;
+    grid-template-columns: 30px repeat(10, 50px); /* 10x10 grid plus row/col labels */
+    grid-template-rows: 30px repeat(10, 50px);
+    gap: 5px;
+}
+.self {
+    grid-column: 1; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+}
+.op {
+    grid-column: 3; /* Place the controls in column 3 */
+    grid-row: 1; /* Row 1 */
+}
+/* individual cells on the board */
+.cell {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    border: 1px solid black;
+    position: relative;
+}
+
+/* Style for Player 1's board (blue theme) */
+#p1self .cell {
+    background-color: rgb(173, 216, 230);
+}
+#p1self .row-label, #p1self .col-label {
+    background-color: #87ceeb; /* Lighter blue for labels */
+    color: white;
+}
+/* Style for Player 2's board (red theme) */
+#p2self .cell {
+    background-color: lightcoral;
+}
+#p2self .row-label, #p2self .col-label {
+    background-color: #ff6347; /* Lighter red for labels */
+    color: white;
+}
+/* Style for Player 1's opponent board (red theme) */
+#p1opponent .cell {
+    background-color: rgb(240, 128, 128);
+}
+#p1opponent .row-label, #p1opponent .col-label {
+    background-color: #ff6347; /* Lighter red for labels */
+    color: white;
+}
+/* Style for Player 2's opponent board (blue theme) */
+#p2opponent .cell {
+    background-color: lightblue;
+}
+#p2opponent .row-label, #p2opponent .col-label {
+    background-color: #87ceeb; /* Lighter blue for labels */
+    color: white;
+}
+/* Red/blue dot for hits and misses */
+.hit-self::before {
+    background-color: red;
+}
+.miss-self::before {
+    background-color: black;
+}
+.label {
+    text-align: center;
+    line-height: 30px;
+}
+/* color change red if hit */
+.hit {
+    background-color: red !important;
+}
+/* color change black if miss */
+.miss {
+    background-color: black !important;
+}
+/* Add red dot for hit */
+.hit-self::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center the dot */
+    z-index: 10;  /* Ensure the dot is above the background */
+}
+/* Add black dot for miss */
+.miss-self::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center the dot */
+    z-index: 10;  /* Ensure the dot is above the background */
+}
+/* Gray if ship in this cell */
+.placed {
+    background-color: gray !important;
+    position: relative;
+}
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0); /* Black background with transparency */
+    color: goldenrod;
+    justify-content: center;
+    align-items: center;
+}
+/* Modal content */
+.modal-content {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 50%;
+}
+#fireworksCanvas {
+    display: none; /* Hide the canvas initially */
+    position: fixed;
+    background-color: black;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+}
