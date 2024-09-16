@@ -1,22 +1,47 @@
+class Ship {
+    constructor(length, coordinates) {
+        this.length = length;
+        this.coordinates = coordinates; // Store the ship's coordinates (e.g., ['A1', 'A2'])
+        this.hits = 0;
+        this.sunk = false;
+        this.hitCoordinates = []; // Track hit coordinates to avoid double hits
+    }
+
+    hit(coord) {
+        // Check if the hit coordinate is part of the ship and hasn't been hit before
+        if (this.coordinates.includes(coord) && !this.hitCoordinates.includes(coord)) {
+            this.hits++;
+            this.hitCoordinates.push(coord); // Mark this coordinate as hit
+            if (this.hits === this.length) {
+                this.sunk = true;
+            }
+            return { hit: true, sunk: this.sunk }; // Return both hit status and sunk status
+        }
+        return { hit: false, sunk: false }; // Not a hit, return false
+    }
+}
+
+
+
 class Player {
-    ships = [];//array containing player's ships
-    shipsLeft = 0;//tracks how many ships this player has left
     constructor(id) {
-        this._id = id;
+        this.id = id;
+        this.ships = [];
+        this.shipsLeft = 0;
     }
 
-    //player id getter
-    get id(){
-        return this._id;
+    addShip(length, coordinates) {
+        const ship = new Ship(length, coordinates); // Pass the coordinates to the Ship constructor
+        this.ships.push(ship);
+        this.shipsLeft++;
     }
 
-    //shipsLeft getter
-    get shipsLeft() {
-        return this._shipsLeft;
-    }
-
-    //ships getter
-    get ships() {
-        return this._ships;
+    recordHit(shipIndex) {
+        const sunk = this.ships[shipIndex].hit();
+        if (sunk) {
+            this.shipsLeft--;
+            return true; // Ship was sunk
+        }
+        return false; // Ship was hit but not sunk
     }
 }

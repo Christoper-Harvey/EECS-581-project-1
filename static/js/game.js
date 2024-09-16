@@ -212,72 +212,105 @@ document.addEventListener("DOMContentLoaded", function () {
     function placeShip(row, col, length, direction) {
         let boardId = p2PlaceShips ? "p2self" : "p1self"; // Determine which player's board
         const board = document.getElementById(boardId);   // Get the correct board element
-
+        let coordinates = [];  // Array to store ship's positions in "A1" format
+    
         for (let i = 0; i < length; i++) {
             const currentRow = direction === "horizontal" ? row : row + i;
             const currentCol = direction === "horizontal" ? col + i : col;
-
+    
             // Query the correct cell in the specified board
             const cell = board.querySelector(`.cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
             cell.classList.add("placed");
-
-            // Store the ship's position in the correct player's array
-            if (p2PlaceShips) {
-                p2.ships.push({ row: currentRow, col: currentCol });
-                p2.shipsLeft++;
-            } else {
-                p1.ships.push({ row: currentRow, col: currentCol });
-                p1.shipsLeft++;
-            }
+    
+            // Convert currentRow and currentCol to "A1" format and add to coordinates array
+            const colLabel = colLabels[currentCol]; // 'A', 'B', etc.
+            const rowLabel = rowLabels[currentRow]; // '1', '2', etc.
+            const coord = `${colLabel}${rowLabel}`;
+            coordinates.push(coord); // Add to the ship's coordinates array
+        }
+    
+        // Store the ship's coordinates in the player's ship array
+        if (p2PlaceShips) {
+            p2.addShip(length, coordinates); // Pass the array of coordinates to Player class
+        } else {
+            p1.addShip(length, coordinates); // Pass the array of coordinates to Player class
         }
     }
 
 
     // Click event handler for attacking
-    // const board = document.getElementById("p1self");
     boards.forEach(board => {
         board.addEventListener("click", function (event) {
             if (isAttackPhase && !hasFired && event.target.classList.contains("cell")) {
                 const row = event.target.dataset.row;
                 const col = event.target.dataset.col;
+                const coord = `${colLabels[col]}${rowLabels[row]}`; // Convert row/col to A1 format
     
-                if (board == document.getElementById("p1opponent")){
-                        // Check if the player hits or misses
-                        if (p2.ships.some(ship => ship.row == row && ship.col == col)) {
-                            // Check if the cell has already been hit
-                            if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
-                                hasFired = true;
-                                canonFire.play();
-                                setTimeout(() => {
-                                    event.target.classList.add("hit");
-                                    document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("hit-self");
-                                    playRandomHitSound();
-                                    playHitAnimation(event.target);
+                if (board == document.getElementById("p1opponent")) {
+                    // Player 1 is attacking Player 2's ships
+                    let hitShip = null;
+                    let hitResult = { hit: false, sunk: false }; // Store hit results
+    
+                    p2.ships.forEach((ship, index) => {
+                        const result = ship.hit(coord);
+                        if (result.hit) {
+                            hitShip = ship;
+                            hitResult = result; // Store the result of the hit
+                        }
+                    });
+    
+                    if (hitResult.hit) {
+                        // Check if the cell has already been hit
+                        if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
+                            hasFired = true;
+                            canonFire.play();
+                            setTimeout(() => {
+                                event.target.classList.add("hit");
+                                document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("hit-self");
+                                playRandomHitSound();
+                                playHitAnimation(event.target);
+    
+                                // Check if the ship is sunk
+                                if (hitResult.sunk) {
+                                    playSunkSound();
                                     p2.shipsLeft--;
                                     checkWin();
-                                    p1hits++;
-                                    document.getElementById('p1-hits').innerText = p1hits;
-                                    document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
-                                }, 1500);
-                            }
-                        } else {
-                            // Check if the cell has already been missed
-                            if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
-                                hasFired = true;
-                                canonFire.play();
-                                setTimeout(() => {
-                                    event.target.classList.add("miss");
-                                    document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("miss-self");
-                                    playRandomMissSound();
-                                    playMissAnimation(event.target);
-                                    p1miss++;
-                                    document.getElementById('p1-miss').innerText = p1miss;
-                                }, 1500);
-                            }
+                                }
+    
+                                p1hits++;
+                                document.getElementById('p1-hits').innerText = p1hits;
+                                document.getElementById('p2-ships-left').innerText = p2.shipsLeft;
+                            }, 1500);
                         }
+                    } else {
+                        // Missed the ship
+                        if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
+                            hasFired = true;
+                            canonFire.play();
+                            setTimeout(() => {
+                                event.target.classList.add("miss");
+                                document.getElementById('p2self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("miss-self");
+                                playRandomMissSound();
+                                playMissAnimation(event.target);
+                                p1miss++;
+                                document.getElementById('p1-miss').innerText = p1miss;
+                            }, 1500);
+                        }
+                    }
                 } else {
-                    // Check if the player hits or misses
-                    if (p1.ships.some(ship => ship.row == row && ship.col == col)) {
+                    // Player 2 is attacking Player 1's ships
+                    let hitShip = null;
+                    let hitResult = { hit: false, sunk: false }; // Store hit results
+    
+                    p1.ships.forEach((ship, index) => {
+                        const result = ship.hit(coord);
+                        if (result.hit) {
+                            hitShip = ship;
+                            hitResult = result; // Store the result of the hit
+                        }
+                    });
+    
+                    if (hitResult.hit) {
                         // Check if the cell has already been hit
                         if (!event.target.classList.contains('hit') && !event.target.classList.contains('miss')) {
                             hasFired = true;
@@ -287,15 +320,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                 document.getElementById('p1self').querySelector(`.cell[data-row="${row}"][data-col="${col}"]`).classList.add("hit-self");
                                 playRandomHitSound();
                                 playHitAnimation(event.target);
-                                p1.shipsLeft--;
-                                checkWin();
+    
+                                // Check if the ship is sunk
+                                if (hitResult.sunk) {
+                                    playSunkSound();
+                                    p1.shipsLeft--;
+                                    checkWin();
+                                }
+    
                                 p2hits++;
                                 document.getElementById('p2-hits').innerText = p2hits;
                                 document.getElementById('p1-ships-left').innerText = p1.shipsLeft;
                             }, 1500);
                         }
                     } else {
-                        // Check if the cell has already been missed
+                        // Missed the ship
                         if (!event.target.classList.contains('miss') && !event.target.classList.contains('hit')) {
                             hasFired = true;
                             canonFire.play();
@@ -308,14 +347,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                 document.getElementById('p2-miss').innerText = p2miss;
                             }, 1500);
                         }
-                    }                        
+                    }
                 }
-            }
-            else if (isAttackPhase && event.target.classList.contains("cell") && hasFired) {
+            } else if (isAttackPhase && event.target.classList.contains("cell") && hasFired) {
                 alert("You can only fire once per turn.");
             }
         });
     });
+    
+    
 
     //checks if a player has won and executes end game
     function checkWin() {

@@ -29,3 +29,8 @@ function playRandomHitSound() {
     const randomIndex = Math.floor(Math.random() * hitSounds.length);
     hitSounds[randomIndex].play();
 }
+
+// Function to randomly select and play one of the hit sounds
+function playSunkSound() {
+    endGame.play();
+}
