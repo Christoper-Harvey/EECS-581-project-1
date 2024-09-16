@@ -1,3 +1,12 @@
+/**
+ * NAME: Battleship - EECS581 Project 1 - fireworks
+ * DESCRIPTION: This program controls makes fireworks for the victor of battleship at the end of the game
+ * INPUT: None
+ * OUTPUT: displays fireworks on the screen
+ * SOURCES: 
+ * AUTHORS: Chris Harvey
+ * DATE: 9/11/24
+ */
 const canvas = document.getElementById("fireworksCanvas");
 const ctx = canvas.getContext("2d");
 

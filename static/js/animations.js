@@ -4,7 +4,7 @@
  * INPUT: hit and miss animations take the cell to animate
  *        alert takes message to alert
  * OUTPUT: outputs an animation or message to UI
- * SOURCES: None
+ * SOURCES: 
  * AUTHORS: Chris Harvey, Ryan Strong
  * DATE: 9/10/24
  */
