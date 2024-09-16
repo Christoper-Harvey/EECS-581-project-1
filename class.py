@@ -132,17 +132,39 @@ class Player():
         state = json.dumps(state)
         return state
     
-    def update_state(self, state):
-        # Updates each ship's hp
+    def set_positions(self, state):
+        # Catches state updates for opposite players
+        if self.id != state['ID']:
+            return
+        
+        # Updates each ship's hp regardless of how the index of the list changes
         for ship in self.ships:
             match ship.type:
                 case 'A': # Aircraft carrier
-                    self.ships[0].hp = state["Aircraft"]
+                    ship.set_pos(state["Aircraft"])
                 case 'B': # Battleship
-                    self.ships[1].hp = state["Battleship"]
+                    ship.set_pos(state["Battleship"])
                 case 'C': # Crusier
-                    self.ships[2].hp = state["Crusier"]
+                    ship.set_pos(state["Crusier"])
                 case 'S': # Submarine
-                    self.ships[3].hp = state ["Submarine"]
+                    ship.set_pos(state["Submarine"])
                 case 'D': # Destroyer
-                    self.ships[4].hp = state["Destroyer"]
+                    ship.set_pos(state["Destroyer"])
+
+def main():
+    player1 = Player('Ian')
+    player2 = Player('Faith')
+
+    player1.status()
+    player2.status()
+
+    state = '{"ID":"Ian", "Aircraft":4,"Battleship":4,"Crusier":2,"Submarine":0,"Destroyer":2,"Hits":["D3","D5","D4"],"Misses":["A1"]}'
+
+    state = json.loads(state)
+
+    player1.update_state(state)
+
+    player1.status() 
+
+if __name__ == "__main__":
+    main()
